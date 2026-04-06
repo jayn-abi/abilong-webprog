@@ -4,24 +4,31 @@ import Layout from "./components/Layout";
 import ArticlePage from './pages/ArticlePage'; 
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
+import NotFoundPage from './pages/NotFoundPage';
+import ArticleListPage from './pages/ArticleListPage';
 
 const routes = [
   {
     path: '/',
     element: <Layout />,
+    errorElement: <NotFoundPage />,
     children: [
       {
-        path:'',
+        path:'/',
         element: <HomePage />,
       },
       {
-        path: 'about',
+        path: '/about',
         element: <AboutPage />,
       },
       {
-        path: 'articles',
-        element: <ArticlePage />,   
+        path: '/articles',
+        element: <ArticleListPage />,   
       },
+      {
+        path:'/articles/:name' ,
+        element: <ArticlePage />, 
+      }
     ],
   },
 ];
@@ -34,7 +41,7 @@ function App() {
   <RouterProvider router={router} />
   </>
 
-  );
+  );  
 }
 
 export default App;
