@@ -41,30 +41,31 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="border-t-2 border-zinc-900 bg-zinc-50">
-      {/* Main Footer Content */}
+    <footer className="border-t border-(--border) bg-(--card) transition-colors duration-300">
+
+      {/* Main footer content */}
       <div className="px-4 py-8 sm:px-6 lg:px-8">
         <div className="grid gap-8 lg:grid-cols-3 lg:items-start">
 
-          {/* Brand Column */}
+          {/* Brand */}
           <div>
-            <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-zinc-500">
+            <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-(--muted)">
               Portfolio
             </p>
-            <h2 className="text-2xl font-bold text-zinc-900">
+            <h2 className="text-2xl font-bold text-(--text)">
               Jhyne's{" "}
-              <span className="bg-gradient-to-r from-[#4f46e5] to-[#06b6d4] bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-[#00d4ff] to-[#a855f7] bg-clip-text text-transparent">
                 Space
               </span>
             </h2>
-            <p className="mt-3 max-w-xs text-sm leading-6 text-zinc-600">
+            <p className="mt-3 max-w-xs text-sm leading-6 text-(--muted)">
               Turning ideas into real-world digital solutions. IT student. Mobile & web developer. Community advocate.
             </p>
           </div>
 
-          {/* Navigation Column */}
+          {/* Navigation */}
           <div>
-            <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.28em] text-zinc-500">
+            <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.28em] text-(--muted)">
               Navigation
             </p>
             <nav className="flex flex-col gap-2">
@@ -72,7 +73,7 @@ const Footer = () => {
                 <Link
                   key={link.label}
                   to={link.to}
-                  className="w-fit text-sm font-medium text-zinc-700 transition-all duration-200 hover:bg-gradient-to-r hover:from-[#4f46e5] hover:to-[#06b6d4] hover:bg-clip-text hover:text-transparent"
+                  className="w-fit text-sm font-medium text-(--muted) transition-all duration-200 hover:text-[#00d4ff]"
                 >
                   {link.label}
                 </Link>
@@ -80,9 +81,9 @@ const Footer = () => {
             </nav>
           </div>
 
-          {/* Connect Column */}
+          {/* Connect */}
           <div>
-            <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.28em] text-zinc-500">
+            <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.28em] text-(--muted)">
               Connect
             </p>
             <div className="flex flex-col gap-3">
@@ -92,7 +93,7 @@ const Footer = () => {
                   href={social.href}
                   target={social.href.startsWith("mailto") ? undefined : "_blank"}
                   rel="noopener noreferrer"
-                  className="group inline-flex w-fit items-center gap-2 rounded-2xl border-2 border-zinc-900 bg-zinc-100 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.24em] text-zinc-700 transition-all duration-200 hover:border-[#4f46e5] hover:bg-zinc-900 hover:text-white"
+                  className="group inline-flex w-fit items-center gap-2 rounded-full border border-(--border) bg-(--glass) backdrop-blur-sm px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.24em] text-(--muted) transition-all duration-200 hover:border-[#00d4ff]/50 hover:text-[#00d4ff] hover:shadow-[0_0_12px_rgba(0,212,255,0.2)]"
                 >
                   {social.icon}
                   {social.label}
@@ -104,11 +105,11 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* Bottom Bar */}
-      <div className="border-t-2 border-zinc-900 bg-zinc-100 px-4 py-4 sm:px-6 lg:px-8">
+      {/* Bottom bar */}
+      <div className="border-t border-(--border) bg-(--base) px-4 py-4 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center justify-between gap-3 sm:flex-row">
 
-          {/* KPI strip */}
+          {/* Stat strip */}
           <div className="flex items-center gap-4">
             {[
               { value: "5", label: "Projects" },
@@ -116,10 +117,10 @@ const Footer = () => {
               { value: "100%", label: "Commitment" },
             ].map((stat) => (
               <div key={stat.label} className="flex items-baseline gap-1">
-                <span className="bg-gradient-to-r from-[#4f46e5] to-[#06b6d4] bg-clip-text text-sm font-bold text-transparent">
+                <span className="bg-linear-to-r from-[#00d4ff] to-[#a855f7] bg-clip-text text-sm font-bold text-transparent">
                   {stat.value}
                 </span>
-                <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-zinc-500">
+                <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-(--muted)">
                   {stat.label}
                 </span>
               </div>
@@ -127,8 +128,8 @@ const Footer = () => {
           </div>
 
           {/* Copyright */}
-          <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-zinc-500">
-            © {currentYear} Jhyne — All rights reserved
+          <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-(--muted)">
+            © {currentYear} 
           </p>
 
         </div>
