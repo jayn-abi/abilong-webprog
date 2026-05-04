@@ -10,18 +10,17 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import InputBase from '@mui/material/InputBase';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
-import SearchIcon from '@mui/icons-material/Search';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import CustomButton from '../components/Button';
+import { useEffect } from 'react';
 
 const drawerWidth = 240;
 const miniWidth = 56;
@@ -113,38 +112,15 @@ const Drawer = styled(MuiDrawer, {
     }),
 }));
 
-const SearchBox = styled('div')(() => ({
-    position: 'relative',
-    borderRadius: '2rem',
-    backgroundColor: 'rgba(15, 15, 26, 0.05)',
-    border: '1px solid rgba(15, 15, 26, 0.09)',
-    '&:hover': { backgroundColor: 'rgba(15, 15, 26, 0.08)' },
-    display: 'flex',
-    alignItems: 'center',
-}));
-
-const SearchIconSlot = styled('div')(() => ({
-    padding: '0 0.6rem 0 0.75rem',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    color: 'rgba(15, 15, 26, 0.38)',
-}));
-
-const StyledInput = styled(InputBase)(({ theme }) => ({
-    color: '#0f0f1a',
-    '& .MuiInputBase-input': {
-        padding: '6px 12px 6px 0',
-        width: '14ch',
-        [theme.breakpoints.up('md')]: { width: '18ch' },
-        '&::placeholder': { color: 'rgba(15, 15, 26, 0.38)', opacity: 1 },
-    },
-}));
-
 /* ── Component ── */
 const DashLayout = () => {
     const [open, setOpen] = useState(false);
     const location = useLocation();
+    const pageTitle = NAV_ITEMS.find((item) => item.to === location.pathname)?.title ?? 'Dashboard';
+
+    useEffect(() => {
+        document.title = pageTitle;
+    }, [pageTitle]);
 
     return (
         <Box sx={{ display: 'flex' }}>
@@ -170,12 +146,7 @@ const DashLayout = () => {
                         <span className="gradient-text">Dashboard</span>
                     </Typography>
 
-                   
                     <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                        <SearchBox>
-                            <SearchIconSlot><SearchIcon fontSize="small" /></SearchIconSlot>
-                            <StyledInput placeholder="Search…" inputProps={{ 'aria-label': 'search' }} />
-                        </SearchBox>
                         <CustomButton variant="primary" to="/auth/signin">Logout</CustomButton>
                     </Box>
                 </Toolbar>
@@ -211,7 +182,7 @@ const DashLayout = () => {
                 <Divider sx={{ borderColor: 'rgba(15,15,26,0.06)' }} />
 
                 <List sx={{ px: 1, pt: 1.5 }}>
-                    {NAV_ITEMS.map(({ label, to, icon: Icon }) => {
+                    {NAV_ITEMS.map(({ label, to, icon: NavIcon }) => {
                         const active = location.pathname === to;
                         return (
                             <ListItem key={label} disablePadding sx={{ display: 'block', mb: 0.5 }}>
@@ -247,7 +218,7 @@ const DashLayout = () => {
                                             transition: 'color 0.15s ease',
                                         }}
                                     >
-                                        <Icon fontSize="small" />
+                                        <NavIcon fontSize="small" />
                                     </ListItemIcon>
                                     <ListItemText
                                         primary={label}
@@ -265,7 +236,7 @@ const DashLayout = () => {
                 </List>
             </Drawer>
 
-            {/* ── Main Content ── */}
+           
             <Box
                 component="main"
                 sx={{

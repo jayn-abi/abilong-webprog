@@ -39,14 +39,12 @@ function DashboardPage() {
     return (
         <div className="pb-10">
 
-            {/* Page Header */}
-            <div className="mb-8 flex items-start justify-between gap-4 flex-wrap">
+           
+            <div className="glass-card rounded-[1.25rem] p-5 mb-6 flex items-center justify-between gap-4 flex-wrap">
                 <div>
-                    
-                    <h1 className="mt-1 text-3xl font-bold" style={{ color: '#0f0f1a' }}>Dashboard</h1>
-                    
+                    <h1 className="text-2xl font-bold" style={{ color: '#0f0f1a' }}>Dashboard</h1>
+                    <p className="text-sm mt-1" style={{ color: 'rgba(15,15,26,0.45)' }}>{today}</p>
                 </div>
-                
             </div>
 
             {/* KPI Cards */}
@@ -69,7 +67,7 @@ function DashboardPage() {
                 ))}
             </div>
 
-            {/* Location Map */}
+           
             <div className="flex items-end justify-between gap-4 mb-4 flex-wrap">
                 <div>
                     

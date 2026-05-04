@@ -1,7 +1,23 @@
-import { Outlet } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
 import logo from '../assets/images/logo.png';
 
 const AuthLayout = () => {
+  const location = useLocation();
+  const pathname = location.pathname;
+ 
+    useEffect(() => {
+    if (pathname === "/" || pathname === "") {
+      document.title = "cy.dev";
+    } else if (pathname.includes("signin")) {
+      document.title = "Sign In | cy.dev";
+    } else if (pathname.includes("signup")) {
+      document.title = "Sign Up | cy.dev";
+    } else {
+      document.title = "cy.dev";
+    }
+  }, [pathname]);
+
   return (
     <section className="min-h-screen bg-(--base) text-(--text) transition-colors duration-300">
       <div className="grid min-h-screen w-full lg:grid-cols-[1fr_0.95fr]">
