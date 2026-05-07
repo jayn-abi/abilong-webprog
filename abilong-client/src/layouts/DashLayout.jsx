@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Outlet, Link, useLocation } from 'react-router-dom';
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiAppBar from '@mui/material/AppBar';
@@ -19,16 +19,19 @@ import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
 import AssessmentIcon from '@mui/icons-material/Assessment';
-import CustomButton from '../components/Button';
+import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
+import LogoutIcon from '@mui/icons-material/Logout';
+import Button from '@mui/material/Button';
 import { useEffect } from 'react';
 
 const drawerWidth = 240;
 const miniWidth = 56;
 
-const NAV_ITEMS = [
-    { label: 'Dashboard', title: 'Dashboard', to: '/dashboard',         icon: DashboardIcon },
-    { label: 'Reports',   title: 'Reports',   to: '/dashboard/reports', icon: AssessmentIcon },
-    { label: 'Users',     title: 'Users',     to: '/dashboard/users',   icon: PeopleIcon },
+const ALL_NAV_ITEMS = [
+    { label: 'Dashboard', title: 'Dashboard', to: '/dashboard',          icon: DashboardIcon,       types: ['admin', 'editor'] },
+    { label: 'Reports',   title: 'Reports',   to: '/dashboard/reports',  icon: AssessmentIcon,      types: ['admin', 'editor'] },
+    { label: 'Articles',  title: 'Articles',  to: '/dashboard/articles', icon: ArticleOutlinedIcon, types: ['admin', 'editor'] },
+    { label: 'Users',     title: 'Users',     to: '/dashboard/users',    icon: PeopleIcon,          types: ['admin'] },
 ];
 
 /* ── Drawer animations ── */
@@ -116,7 +119,17 @@ const Drawer = styled(MuiDrawer, {
 const DashLayout = () => {
     const [open, setOpen] = useState(false);
     const location = useLocation();
+    const navigate = useNavigate();
+    const userType  = localStorage.getItem('type') ?? '';
+    const NAV_ITEMS = ALL_NAV_ITEMS.filter((item) => item.types.includes(userType));
     const pageTitle = NAV_ITEMS.find((item) => item.to === location.pathname)?.title ?? 'Dashboard';
+
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('firstName');
+        localStorage.removeItem('type');
+        navigate('/auth/signin');
+    };
 
     useEffect(() => {
         document.title = pageTitle;
@@ -147,7 +160,27 @@ const DashLayout = () => {
                     </Typography>
 
                     <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                        <CustomButton variant="primary" to="/auth/signin">Logout</CustomButton>
+                        <Button
+                            size="small"
+                            variant="outlined"
+                            startIcon={<LogoutIcon fontSize="small" />}
+                            onClick={handleLogout}
+                            sx={{
+                                textTransform: 'none',
+                                fontWeight: 600,
+                                borderRadius: '50px',
+                                px: 2,
+                                borderColor: 'rgba(15,15,26,0.2)',
+                                color: '#374151',
+                                '&:hover': {
+                                    borderColor: '#ef4444',
+                                    color: '#ef4444',
+                                    bgcolor: 'rgba(239,68,68,0.05)',
+                                },
+                            }}
+                        >
+                            Logout
+                        </Button>
                     </Box>
                 </Toolbar>
             </AppBar>
@@ -182,7 +215,9 @@ const DashLayout = () => {
                 <Divider sx={{ borderColor: 'rgba(15,15,26,0.06)' }} />
 
                 <List sx={{ px: 1, pt: 1.5 }}>
-                    {NAV_ITEMS.map(({ label, to, icon: NavIcon }) => {
+                    {NAV_ITEMS.map((item) => {
+                        const NavIcon = item.icon;
+                        const { label, to } = item;
                         const active = location.pathname === to;
                         return (
                             <ListItem key={label} disablePadding sx={{ display: 'block', mb: 0.5 }}>

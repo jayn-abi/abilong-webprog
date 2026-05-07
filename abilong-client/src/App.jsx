@@ -1,5 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ThemeProvider from "./context/ThemeContext";
+import { ArticleProvider } from "./context/ArticleContext";
+import PrivateRoute from "./components/PrivateRoute";
 
 import Layout from "./layouts/Layout";
 import ArticlePage from './pages/LandingPages/ArticlePage';
@@ -8,17 +10,15 @@ import AboutPage from './pages/LandingPages/AboutPage';
 import NotFoundPage from './pages/NotFoundPage';
 import ArticleListPage from './pages/LandingPages/ArticleListPage';
 
-
 import AuthLayout from "./layouts/AuthLayout";
 import SignInPage from "./pages/AuthPages/SignInPage";
 import SignUpPage from "./pages/AuthPages/SignUpPage";
-
 
 import DashLayout from "./layouts/DashLayout";
 import DashboardPage from "./pages/DashboardPages/DashboardPage";
 import ReportsPage from "./pages/DashboardPages/ReportsPage";
 import UsersPage from "./pages/DashboardPages/UsersPage";
-
+import DashArticleListPage from "./pages/DashboardPages/DashArticleListPage";
 
 const routes = [
   {
@@ -26,22 +26,10 @@ const routes = [
     element: <Layout />,
     errorElement: <NotFoundPage />,
     children: [
-      {
-        path: '/',
-        element: <HomePage />,
-      },
-      {
-        path: '/about',
-        element: <AboutPage />,
-      },
-      {
-        path: '/articles',
-        element: <ArticleListPage />,
-      },
-      {
-        path: '/articles/:name',
-        element: <ArticlePage />,
-      }
+      { path: '/',            element: <HomePage /> },
+      { path: '/about',       element: <AboutPage /> },
+      { path: '/articles',    element: <ArticleListPage /> },
+      { path: '/articles/:id', element: <ArticlePage /> },
     ],
   },
   {
@@ -49,34 +37,27 @@ const routes = [
     element: <AuthLayout />,
     errorElement: <NotFoundPage />,
     children: [
-      {
-        path: "signin",
-        element: <SignInPage />,
-      },
-      {
-        path: "signup",
-        element: <SignUpPage />,
-      }
+      { path: "signin", element: <SignInPage /> },
+      { path: "signup", element: <SignUpPage /> },
     ],
   },
   {
     path: "dashboard/",
-    element: <DashLayout />,
+    element: <PrivateRoute><DashLayout /></PrivateRoute>,
     errorElement: <NotFoundPage />,
     children: [
+      { path: "",         element: <DashboardPage /> },
+      { path: "reports",  element: <ReportsPage /> },
+      { path: "articles", element: <DashArticleListPage /> },
       {
-        path:"", 
-        element: <DashboardPage />,
-      }, 
-      {
-        path:"reports",
-        element: <ReportsPage />,
+        path: "users",
+        element: (
+          <PrivateRoute allowedTypes={['admin']}>
+            <UsersPage />
+          </PrivateRoute>
+        ),
       },
-      {
-        path:"users",
-        element: <UsersPage />,
-      },
-    ]
+    ],
   },
 ];
 
@@ -85,7 +66,9 @@ const router = createBrowserRouter(routes);
 function App() {
   return (
     <ThemeProvider>
-      <RouterProvider router={router} />
+      <ArticleProvider>
+        <RouterProvider router={router} />
+      </ArticleProvider>
     </ThemeProvider>
   );
 }

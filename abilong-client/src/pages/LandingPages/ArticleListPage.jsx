@@ -1,12 +1,25 @@
 import Button from '../../components/Button';
 import ArticleList from '../../components/ArticleList';
-import articles from '../../data/article-content';
+import { useArticles } from '../../context/ArticleContext';
 
 const ArticleListPage = () => {
+  const { articles: allArticles } = useArticles();
+
+  const articles = allArticles
+    .filter((a) => a.isPublished)
+    .map((a) => ({
+      name:    a._id,
+      title:   a.title,
+      image:   a.image ?? '',
+      content: typeof a.content === 'string'
+        ? a.content.split('\n\n').filter((p) => p.trim())
+        : (Array.isArray(a.content) ? a.content : []),
+      author:  a.author,
+      tag:     a.tag,
+    }));
+
   return (
     <div className="flex w-full flex-col gap-0">
-
-      
       <section className="hero-mesh border-b border-(--border) px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
         <div className="mx-auto max-w-6xl flex flex-col items-center text-center">
           <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.28em] text-(--muted)">
@@ -24,7 +37,6 @@ const ArticleListPage = () => {
         </div>
       </section>
 
-      
       <section className="border-b border-(--border) px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
         <div className="mx-auto max-w-6xl">
           <div className="mb-6">
@@ -36,7 +48,6 @@ const ArticleListPage = () => {
           <ArticleList articles={articles} />
         </div>
       </section>
-
     </div>
   );
 };

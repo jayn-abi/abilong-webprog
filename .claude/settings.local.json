@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Recurse -Directory)",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\jhyne\\\\Desktop\\\\abilong-webprog\\\\abilong-server\" -Recurse -File)",
+      "Bash(Select-Object FullName)",
+      "PowerShell(Rename-Item \"c:\\\\Users\\\\jhyne\\\\Desktop\\\\abilong-webprog\\\\abilong-server\\\\routes\\\\useRoutes.js\" \"userRoutes.js\")",
+      "Bash(npm install *)",
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\jhyne\\\\Desktop\\\\abilong-webprog\\\\abilong-client\\\\src\" -Recurse -File)",
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\jhyne\\\\Desktop\\\\abilong-webprog\\\\abilong-server\" -Recurse -Depth 2)",
+      "Bash(Select-Object FullName, PSIsContainer)",
+      "Bash(Format-Table -AutoSize)"
+    ]
+  }
+}

@@ -1,6 +1,9 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import Button from '../../components/Button';
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import ChildCareIcon from '@mui/icons-material/ChildCare';
@@ -37,48 +40,45 @@ const statCards = [
 
 function DashboardPage() {
     return (
-        <div className="pb-10">
+        <Box sx={{ pb: 5, width: '100%', minWidth: 0 }}>
 
-           
-            <div className="glass-card rounded-[1.25rem] p-5 mb-6 flex items-center justify-between gap-4 flex-wrap">
-                <div>
-                    <h1 className="text-2xl font-bold" style={{ color: '#0f0f1a' }}>Dashboard</h1>
-                    <p className="text-sm mt-1" style={{ color: 'rgba(15,15,26,0.45)' }}>{today}</p>
-                </div>
-            </div>
+            {/* Header */}
+            <Paper elevation={0} sx={{ px: 3.5, pt: 3, pb: 2.75, mb: 2.5, border: '1px solid rgba(15,15,26,0.07)', borderRadius: 2.5, bgcolor: '#fff', boxShadow: '0 1px 4px rgba(15,15,26,0.04)' }}>
+                <Stack direction="row" alignItems="center" gap={2}>
+                    <Typography variant="h5" sx={{ flex: 1, fontWeight: 800, color: '#0f0f1a', letterSpacing: '-0.5px' }}>Dashboard</Typography>
+                </Stack>
+                <Typography sx={{ mt: 0.75, color: '#94a3b8', fontSize: 13.5 }}>{today}</Typography>
+            </Paper>
 
             {/* KPI Cards */}
-            <p className="text-[11px] font-semibold uppercase tracking-[0.28em] mb-3" style={{ color: 'rgba(15,15,26,0.45)' }}>
+            <Typography sx={{ fontSize: 11, fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.08em', mb: 1.5 }}>
                 Key Metrics
-            </p>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-10">
+            </Typography>
+            <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr 1fr', lg: 'repeat(4, 1fr)' }, mb: 4 }}>
                 {statCards.map(({ label, value, icon, accent }) => (
-                    <div
-                        key={label}
-                        className="glass-card card-lift rounded-[1.25rem] p-5"
-                        style={{ borderTop: `2px solid ${accent}55` }}
-                    >
-                        <div style={{ color: accent }}>{icon}</div>
-                        <p className="text-4xl font-bold mt-3" style={{ color: accent }}>{value}</p>
-                        <p className="mt-2 text-[11px] font-semibold uppercase tracking-[0.24em]" style={{ color: 'rgba(15,15,26,0.45)' }}>
+                    <Paper key={label} elevation={0} sx={{
+                        p: 2.5, borderRadius: 2.5,
+                        border: '1px solid rgba(15,15,26,0.07)',
+                        borderTop: `2px solid ${accent}55`,
+                        boxShadow: '0 1px 4px rgba(15,15,26,0.04)',
+                    }}>
+                        <Box sx={{ color: accent }}>{icon}</Box>
+                        <Typography variant="h4" sx={{ fontWeight: 800, mt: 1.5, color: accent }}>{value}</Typography>
+                        <Typography sx={{ mt: 0.75, fontSize: 11, fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
                             {label}
-                        </p>
-                    </div>
+                        </Typography>
+                    </Paper>
                 ))}
-            </div>
+            </Box>
 
-           
-            <div className="flex items-end justify-between gap-4 mb-4 flex-wrap">
-                <div>
-                    
-                    <h2 className="mt-1 text-xl font-bold" style={{ color: '#0f0f1a' }}>Location Map</h2>
-                    <p className="mt-0.5 text-sm" style={{ color: 'rgba(15,15,26,0.45)' }}>
-                        National University — Manila, 551 F Jhocson St, Sampaloc
-                    </p>
-                </div>
-               
-            </div>
-            <div className="glass-card rounded-[1.25rem] overflow-hidden" style={{ height: '420px' }}>
+            {/* Map */}
+            <Paper elevation={0} sx={{ px: 3.5, pt: 3, pb: 2.75, mb: 2, border: '1px solid rgba(15,15,26,0.07)', borderRadius: 2.5, bgcolor: '#fff', boxShadow: '0 1px 4px rgba(15,15,26,0.04)' }}>
+                <Typography variant="h5" sx={{ fontWeight: 800, color: '#0f0f1a', letterSpacing: '-0.5px' }}>Location Map</Typography>
+                <Typography sx={{ mt: 0.75, color: '#94a3b8', fontSize: 13.5 }}>
+                    National University — Manila, 551 F Jhocson St, Sampaloc
+                </Typography>
+            </Paper>
+            <Paper elevation={0} sx={{ border: '1px solid rgba(15,15,26,0.07)', borderRadius: 2.5, overflow: 'hidden', height: 420 }}>
                 <MapContainer
                     center={[14.604253, 120.994314]}
                     zoom={15}
@@ -95,9 +95,9 @@ function DashboardPage() {
                         </Popup>
                     </Marker>
                 </MapContainer>
-            </div>
+            </Paper>
 
-        </div>
+        </Box>
     );
 }
 

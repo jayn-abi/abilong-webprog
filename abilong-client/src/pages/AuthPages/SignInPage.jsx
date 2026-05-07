@@ -1,15 +1,35 @@
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from '../../components/Button';
+import { loginUser } from '../../services/UserService';
 
 const inputClasses =
   'mt-2 w-full rounded-2xl border border-(--border) bg-(--glass) backdrop-blur-sm px-4 py-3 text-sm text-(--text) outline-none transition-all duration-200 placeholder:text-(--muted) focus:border-[#00d4ff]/60 focus:shadow-[0_0_0_3px_rgba(0,212,255,0.10)] focus:bg-(--card)';
 
 const SignInPage = () => {
   const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    navigate('/dashboard');
+    setError('');
+    try {
+      const { data } = await loginUser({ email, password });
+
+      if (data.user.type === 'viewer') {
+        setError('Viewer accounts are not permitted to log in.');
+        return;
+      }
+
+      localStorage.setItem('token',     data.token);
+      localStorage.setItem('firstName', data.user.firstName);
+      localStorage.setItem('type',      data.user.type);
+      navigate('/dashboard', { state: { firstName: data.user.firstName, type: data.user.type } });
+    } catch (err) {
+      setError(err.response?.data?.message || 'Login failed. Please try again.');
+    }
   };
 
   return (
@@ -24,6 +44,12 @@ const SignInPage = () => {
         Access your account using the same monochrome wireframe language used across the site.
       </p>
 
+      {error && (
+        <p className="mt-4 rounded-xl bg-red-500/10 border border-red-500/30 px-4 py-2 text-sm text-red-400">
+          {error}
+        </p>
+      )}
+
       <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
         <div>
           <label htmlFor="signin-email" className="text-sm font-medium text-(--text)">
@@ -32,8 +58,11 @@ const SignInPage = () => {
           <input
             id="signin-email"
             type="email"
-            placeholder="Placeholder"
+            placeholder="you@example.com"
             autoComplete="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
             className={inputClasses}
           />
         </div>
@@ -45,37 +74,18 @@ const SignInPage = () => {
           <input
             id="signin-password"
             type="password"
-            placeholder="Placeholder"
+            placeholder="••••••••"
             autoComplete="current-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
             className={inputClasses}
           />
-          <p className="mt-2 text-xs leading-5 text-(--muted)">
-            It must be a combination of minimum 8 letters, numbers, and symbols.
-          </p>
-        </div>
-
-        <div className="flex items-center justify-between gap-4 text-sm">
-          <label className="flex items-center gap-2 text-(--muted) cursor-pointer">
-            <input type="checkbox" className="h-4 w-4 rounded border-(--border) accent-[#00d4ff]" />
-            <span>Remember me</span>
-          </label>
-          <button type="button" className="text-xs font-medium text-(--muted) transition hover:text-[#00d4ff]">
-            Forgot Password?
-          </button>
         </div>
 
         <Button type="submit" variant="primary" className="w-full py-3">
           Log In
         </Button>
-
-        <div className="grid gap-3 pt-2 sm:grid-cols-2">
-          <Button type="button" variant="secondary" className="w-full py-3">
-            Log In with Google
-          </Button>
-          <Button type="button" variant="secondary" className="w-full py-3">
-            Log In with Apple
-          </Button>
-        </div>
       </form>
 
       <div className="mt-8 border-t border-(--border) pt-6 text-sm text-(--muted)">
