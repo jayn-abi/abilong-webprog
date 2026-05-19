@@ -17,7 +17,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const corsOptions = {
-  origin: ["http://localhost:5173", "http://localhost:3000"],
+  origin: [
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "https://abilong-client-git-production-jhyne-s-projects.vercel.app",
+    "https://abilong-client-f60w99uiw-jhyne-s-projects.vercel.app",
+  ],
   credentials: true,
   allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
