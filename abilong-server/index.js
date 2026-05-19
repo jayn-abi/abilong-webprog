@@ -23,6 +23,7 @@ const corsOptions = {
     "https://abilong-client.vercel.app",
     "https://abilong-client-git-production-jhyne-s-projects.vercel.app",
     "https://abilong-client-f60w99uiw-jhyne-s-projects.vercel.app",
+    "https://abilong-client-ft5md0mdj-jhyne-s-projects.vercel.app",
   ],
   credentials: true,
   allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
