@@ -20,6 +20,7 @@ const corsOptions = {
   origin: [
     "http://localhost:5173",
     "http://localhost:3000",
+    "https://abilong-client.vercel.app",
     "https://abilong-client-git-production-jhyne-s-projects.vercel.app",
     "https://abilong-client-f60w99uiw-jhyne-s-projects.vercel.app",
   ],
