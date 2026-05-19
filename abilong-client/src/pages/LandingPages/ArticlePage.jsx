@@ -3,12 +3,12 @@ import { useParams } from 'react-router-dom';
 import { useArticles } from '../../context/ArticleContext';
 
 const ArticlePage = () => {
-  const { name } = useParams();
+  const { id } = useParams();
   const { articles } = useArticles();
 
   const published = articles.filter((a) => a.isPublished);
-  const article = published.find((a) => a._id === name);
-  const articleIndex = published.findIndex((a) => a._id === name);
+  const article = published.find((a) => a._id === id);
+  const articleIndex = published.findIndex((a) => a._id === id);
   const prev = articleIndex > 0 ? published[articleIndex - 1] : null;
   const next = articleIndex < published.length - 1 ? published[articleIndex + 1] : null;
 

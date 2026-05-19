@@ -8,13 +8,13 @@ const AuthLayout = () => {
  
     useEffect(() => {
     if (pathname === "/" || pathname === "") {
-      document.title = "cy.dev";
+      document.title = "";
     } else if (pathname.includes("signin")) {
-      document.title = "Sign In | cy.dev";
+      document.title = "Sign In";
     } else if (pathname.includes("signup")) {
-      document.title = "Sign Up | cy.dev";
+      document.title = "Sign Up";
     } else {
-      document.title = "cy.dev";
+      document.title = "";
     }
   }, [pathname]);
 
