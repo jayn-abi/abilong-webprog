@@ -34,8 +34,8 @@ app.use("/api/articles", articleRoutes);
 
 // Error handler
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: "Server Error" });
+  console.error(err.stack || err);
+  res.status(err.status || 500).json({ message: err.message || "Server Error" });
 });
 
 module.exports = app;
