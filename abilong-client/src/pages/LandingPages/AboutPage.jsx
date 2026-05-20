@@ -1,19 +1,22 @@
 import Button from '../../components/Button';
+import img0 from '../../assets/images/img0.jpg';
+import img1 from '../../assets/images/img1.jpg';
+import img2 from '../../assets/images/img2.jpg';
+import img3 from '../../assets/images/img3.jpg';
+import img4 from '../../assets/images/img4.jpg';
 
 const AboutPage = () => {
   return (
     <div className="flex w-full flex-col gap-0">
 
-      
       <section className="hero-mesh border-b border-(--border) px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
         <div className="mx-auto max-w-6xl grid gap-8 lg:grid-cols-2 lg:items-center">
 
-         
           <div className="gradient-ring rounded-3xl">
             <div className="gradient-ring-inner bg-(--card)">
               <div className="flex min-h-72 items-center justify-center rounded-[calc(1.5rem-3px)] overflow-hidden">
                 <img
-                  src="src/assets/images/img0.jpg"
+                  src={img0}
                   alt="Visual"
                   className="h-full w-full object-cover"
                 />
@@ -40,7 +43,6 @@ const AboutPage = () => {
         </div>
       </section>
 
-      
       <section className="border-b border-(--border) bg-(--card) px-4 py-10 sm:px-6 sm:py-12 lg:px-8 transition-colors duration-300">
         <div className="mx-auto max-w-6xl">
           <div className="mb-6">
@@ -69,7 +71,6 @@ const AboutPage = () => {
         </div>
       </section>
 
-     
       <section className="border-b border-(--border) px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
         <div className="mx-auto max-w-6xl grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
 
@@ -95,10 +96,10 @@ const AboutPage = () => {
               Visual Grid
             </p>
             <div className="mt-5 grid gap-4 sm:grid-cols-2">
-              {["img1.jpg", "img2.jpg", "img3.jpg", "img4.jpg"].map((img, i) => (
+              {[img1, img2, img3, img4].map((img, i) => (
                 <div key={i} className="flex aspect-square items-center justify-center rounded-2xl overflow-hidden border border-(--border)">
                   <img
-                    src={`src/assets/images/${img}`}
+                    src={img}
                     alt={`Image ${i + 1}`}
                     className="h-full w-full object-cover"
                   />
