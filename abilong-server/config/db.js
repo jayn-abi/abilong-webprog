@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { MONGO_DB_URL } = require("./config");
 
 const globalWithMongoose = global;
 let cached = globalWithMongoose._mongoose;
@@ -12,12 +13,12 @@ const connectDB = async () => {
     return cached.conn;
   }
 
-  if (!process.env.MONGO_URI) {
+  if (!MONGO_DB_URL) {
     throw new Error("MONGO_URI environment variable is required");
   }
 
   if (!cached.promise) {
-    cached.promise = mongoose.connect(process.env.MONGO_URI, {}).then((mongooseInstance) => {
+    cached.promise = mongoose.connect(MONGO_DB_URL, {}).then((mongooseInstance) => {
       return mongooseInstance;
     });
   }

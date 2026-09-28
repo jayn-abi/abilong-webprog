@@ -1,131 +1,129 @@
 import { useState, useEffect } from "react";
-import { NavLink, Link } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { Menu, X, Sun, Moon } from "lucide-react";
-
-const GithubIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.605-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z" />
-  </svg>
-);
-import logo from "../assets/images/logo.png";
 import { useTheme } from "../context/ThemeContext";
+import { usePortfolio } from "../context/PortfolioContext";
 
 const links = [
   { label: "Home", to: "/" },
   { label: "About", to: "/about" },
-  { label: "Articles", to: "/articles" },
+  { label: "Projects", to: "/projects" },
+  { label: "Skills", to: "/skills" },
+  { label: "Experience", to: "/experience" },
+  { label: "Contact", to: "/contact" },
 ];
+
+export const BrandMark = () => {
+  const { profile } = usePortfolio();
+  return (
+  <Link to="/" className="group flex items-center gap-3" aria-label={`${profile.name} — home`}>
+    <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-(--border-strong) bg-(--card) font-mono text-[11px] font-bold tracking-tight text-(--accent) transition-colors group-hover:border-(--accent-ring)">
+      {profile.initials}
+    </span>
+    <span className="hidden flex-col leading-tight sm:flex">
+      <span className="text-sm font-semibold text-(--text)">{profile.name}</span>
+      <span className="text-[11px] text-(--subtle)">{profile.tagline}</span>
+    </span>
+  </Link>
+  );
+};
 
 const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { isDark, toggleTheme } = useTheme();
+  const { pathname } = useLocation();
+
+  // Close the mobile menu whenever the page changes
+  const [menuPath, setMenuPath] = useState(pathname);
+  if (menuPath !== pathname) {
+    setMenuPath(pathname);
+    setIsMenuOpen(false);
+  }
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
-    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const navLinkClassName = ({ isActive }) =>
+  useEffect(() => {
+    if (!isMenuOpen) return;
+    const onKey = (e) => e.key === "Escape" && setIsMenuOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [isMenuOpen]);
+
+  const linkClass = ({ isActive }) =>
     [
-      "rounded-full px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.24em] transition-all duration-200",
+      "relative rounded-full px-3.5 py-2 text-sm font-medium transition-colors duration-200",
       isActive
-        ? "bg-[#00d4ff]/10 text-[#00d4ff] shadow-[0_0_14px_rgba(0,212,255,0.35)] border border-[#00d4ff]/30"
+        ? "text-(--accent) bg-(--accent-soft) border border-(--accent-ring) shadow-[0_0_14px_rgba(0,212,255,0.35)]"
         : "text-(--muted) hover:text-(--text) hover:bg-(--glass) border border-transparent",
     ].join(" ");
+
+  const mobileLinkClass = ({ isActive }) =>
+    `flex min-h-12 items-center rounded-xl px-4 text-base font-medium ${
+      isActive ? "bg-(--accent-soft) text-(--accent)" : "text-(--muted)"
+    }`;
 
   return (
     <header
       className={[
-        "fixed inset-x-0 top-0 z-50 h-20 flex flex-col justify-center transition-all duration-300",
-        "bg-(--nav-bg) backdrop-blur-md",
-        scrolled
-          ? "shadow-[0_1px_0_0_rgba(0,212,255,0.25)] border-b border-[#00d4ff]/15"
-          : "border-b border-(--border)",
+        "fixed inset-x-0 top-0 z-50 h-16 transition-[background-color,border-color] duration-300",
+        scrolled || isMenuOpen
+          ? "bg-(--nav-bg) backdrop-blur-md border-b border-(--border)"
+          : "bg-transparent border-b border-transparent",
       ].join(" ")}
     >
-      <div className="mx-auto flex max-w-6xl w-full items-center justify-between px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-full w-full max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <BrandMark />
 
-        {/* Logo */}
-        <NavLink to="/" className="flex items-center gap-3">
-          <img src={logo} alt="Logo" className="h-12 w-auto" />
-        </NavLink>
-
-        
-        <nav className="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
+        <nav aria-label="Primary" className="hidden items-center gap-1 lg:flex">
           {links.map((link) => (
-            <NavLink key={link.to} to={link.to} end={link.to === "/"} className={navLinkClassName}>
+            <NavLink key={link.to} to={link.to} end={link.to === "/"} className={linkClass}>
               {link.label}
             </NavLink>
           ))}
         </nav>
 
-       
         <div className="flex items-center gap-2">
-
-          
-          <Link
-            to="/auth/signin"
-            className="hidden sm:inline-flex items-center px-4 py-2 rounded-full text-[11px] font-semibold uppercase tracking-[0.2em] border border-[#a855f7]/40 text-[#a855f7] hover:bg-[#a855f7]/10 hover:shadow-[0_0_12px_rgba(168,85,247,0.35)] transition-all duration-200"
-          >
-            Sign In
-          </Link>
-
-         
-          <a
-            href="https://github.com/jayn-abi/abilong-webprog"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full text-[11px] font-semibold uppercase tracking-[0.2em] bg-linear-to-r from-[#00d4ff] to-[#a855f7] text-white hover:shadow-[0_0_18px_rgba(0,212,255,0.45)] hover:scale-[1.04] transition-all duration-200"
-          >
-            <GithubIcon />
-            <span>GitHub</span>
-          </a>
-
-          {/* Theme toggle */}
           <button
             onClick={toggleTheme}
-            className="p-2 rounded-full border border-(--border) text-(--muted) hover:text-[#00d4ff] hover:border-[#00d4ff]/40 hover:shadow-[0_0_10px_rgba(0,212,255,0.25)] transition-all duration-200"
-            aria-label="Toggle theme"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-(--border) text-(--muted) transition-colors hover:border-(--accent-ring) hover:text-(--accent)"
+            aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
           >
-            {isDark
-              ? <Sun className="w-4 h-4" />
-              : <Moon className="w-4 h-4" />
-            }
+            {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
 
-          {/* Mobile hamburger */}
           <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 rounded-lg border border-(--border) text-(--muted)"
+            onClick={() => setIsMenuOpen((v) => !v)}
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-(--border) text-(--text) lg:hidden"
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isMenuOpen}
+            aria-controls="mobile-nav"
           >
-            {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
       </div>
 
-    
       {isMenuOpen && (
-        <nav className="md:hidden absolute top-20 inset-x-0 bg-(--nav-bg) backdrop-blur-md border-b border-(--border) py-4 flex flex-col items-center gap-2 z-40">
-          {links.map((link) => (
-            <NavLink
-              key={link.to}
-              to={link.to}
-              end={link.to === "/"}
-              className={navLinkClassName}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              {link.label}
-            </NavLink>
-          ))}
-          <Link
-            to="/auth/signin"
-            className="mt-1 px-6 py-2 rounded-full text-[11px] font-semibold uppercase tracking-[0.2em] border border-[#a855f7]/40 text-[#a855f7] hover:bg-[#a855f7]/10 transition-all duration-200"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Sign In
-          </Link>
+        <nav
+          id="mobile-nav"
+          aria-label="Primary"
+          className="absolute inset-x-0 top-16 border-b border-(--border) bg-(--nav-bg) px-4 py-3 backdrop-blur-md lg:hidden"
+        >
+          <ul className="mx-auto flex max-w-6xl flex-col">
+            {links.map((link) => (
+              <li key={link.to}>
+                <NavLink to={link.to} end={link.to === "/"} className={mobileLinkClass}>
+                  {link.label}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
         </nav>
       )}
     </header>

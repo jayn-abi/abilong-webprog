@@ -8,6 +8,7 @@ import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import ChildCareIcon from '@mui/icons-material/ChildCare';
 import ElderlyIcon from '@mui/icons-material/Elderly';
+import PortfolioOverview from '../../components/admin/PortfolioOverview';
 
 const rows = [
     { id: 1, lastName: 'Snow',       firstName: 'Jon',      age: 35  },
@@ -44,11 +45,14 @@ function DashboardPage() {
 
             {/* Header */}
             <Paper elevation={0} sx={{ px: 3.5, pt: 3, pb: 2.75, mb: 2.5, border: '1px solid rgba(15,15,26,0.07)', borderRadius: 2.5, bgcolor: '#fff', boxShadow: '0 1px 4px rgba(15,15,26,0.04)' }}>
-                <Stack direction="row" alignItems="center" gap={2}>
+                <Stack direction="row" gap={2} sx={{ alignItems: 'center' }}>
                     <Typography variant="h5" sx={{ flex: 1, fontWeight: 800, color: '#0f0f1a', letterSpacing: '-0.5px' }}>Dashboard</Typography>
                 </Stack>
                 <Typography sx={{ mt: 0.75, color: '#94a3b8', fontSize: 13.5 }}>{today}</Typography>
             </Paper>
+
+            {/* Portfolio content (admins manage it) */}
+            {localStorage.getItem('type') === 'admin' && <PortfolioOverview />}
 
             {/* KPI Cards */}
             <Typography sx={{ fontSize: 11, fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.08em', mb: 1.5 }}>

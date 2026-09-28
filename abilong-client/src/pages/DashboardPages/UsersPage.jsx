@@ -281,7 +281,7 @@ const UserPage = () => {
         <Box sx={{ width: '100%', minWidth: 0 }}>
             {/* Header */}
             <Paper elevation={0} sx={{ px: 3.5, pt: 3, pb: 2.75, mb: 2.5, border: '1px solid rgba(15,15,26,0.07)', borderRadius: 2.5, bgcolor: '#fff', boxShadow: '0 1px 4px rgba(15,15,26,0.04)' }}>
-                <Stack direction="row" alignItems="center" gap={2}>
+                <Stack direction="row" gap={2} sx={{ alignItems: 'center' }}>
                     <Typography variant="h5" sx={{ flex: 1, fontWeight: 800, color: '#0f0f1a', letterSpacing: '-0.5px' }}>Users</Typography>
                     <Button variant="contained" startIcon={<PersonAddOutlinedIcon />} onClick={() => openModal()} sx={{
                         textTransform: 'none', fontWeight: 600, borderRadius: '50px', px: 3, py: 1, fontSize: 14, flexShrink: 0,
@@ -343,7 +343,7 @@ const UserPage = () => {
                 PaperProps={{ sx: { borderRadius: { xs: 0, sm: 3 }, boxShadow: '0 20px 60px rgba(0,0,0,0.12)' } }}>
                 <Box component="form" onSubmit={handleSubmit}>
                     <DialogTitle sx={{ p: 0, background: 'linear-gradient(135deg,#1e3a8a,#1d4ed8)' }}>
-                        <Stack direction="row" alignItems="center" spacing={2} sx={{ px: 3.5, py: 2.5 }}>
+                        <Stack direction="row" spacing={2} sx={{ alignItems: 'center', px: 3.5, py: 2.5 }}>
                             <Box sx={{ width: 42, height: 42, borderRadius: '12px', background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                                 <PersonAddOutlinedIcon sx={{ color: '#fff', fontSize: 20 }} />
                             </Box>

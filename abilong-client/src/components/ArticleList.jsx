@@ -22,7 +22,7 @@ function ArticleList({ articles }) {
 
           {/* Content */}
           <div className="flex flex-col flex-1 p-4">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#00d4ff] font-mono">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-(--accent) font-mono">
               Article {String(index + 1).padStart(2, '0')}
             </p>
 

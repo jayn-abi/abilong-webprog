@@ -1,137 +1,95 @@
 import { Link } from "react-router-dom";
+import { Mail, ArrowUp } from "lucide-react";
+import { BrandMark } from "./NavBar";
+import { GithubIcon, LinkedinIcon } from "./portfolio/icons";
+import { usePortfolio } from "../context/PortfolioContext";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const { profile, links } = usePortfolio();
 
-  const navLinks = [
-    { label: "Home", to: "/" },
+  const sections = [
     { label: "About", to: "/about" },
     { label: "Projects", to: "/projects" },
+    { label: "Skills", to: "/skills" },
+    { label: "Experience", to: "/experience" },
     { label: "Contact", to: "/contact" },
   ];
 
-  const socialLinks = [
-    {
-      label: "GitHub",
-      href: "https://github.com/",
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.605-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z" />
-        </svg>
-      ),
-    },
-    {
-      label: "LinkedIn",
-      href: "https://linkedin.com/",
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-        </svg>
-      ),
-    },
-    {
-      label: "Email",
-      href: "mailto:jhyne@email.com",
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-        </svg>
-      ),
-    },
-  ];
+  const resources = [
+    { label: "CV", href: links.cv },
+    { label: "Transcript of Records", href: links.transcript },
+    links.certificates
+      ? { label: "Certifications", href: links.certificates }
+      : { label: "Certifications", to: "/skills#certifications" },
+    { label: "Video Introduction", href: links.video },
+    { label: "Articles", to: "/articles" },
+  ].filter((r) => r.to || r.href);
+
+  const socials = [
+    { label: "GitHub", href: links.github, icon: <GithubIcon /> },
+    { label: "LinkedIn", href: links.linkedin, icon: <LinkedinIcon /> },
+    { label: "Email", href: links.email && `mailto:${links.email}`, icon: <Mail className="h-4 w-4" /> },
+  ].filter((s) => s.href);
+
+  const linkClass = "text-sm text-(--muted) transition-colors hover:text-(--accent)";
 
   return (
     <footer className="border-t border-(--border) bg-(--card) transition-colors duration-300">
-
-      {/* Main footer content */}
-      <div className="px-4 py-8 sm:px-6 lg:px-8">
-        <div className="grid gap-8 lg:grid-cols-3 lg:items-start">
-
-          {/* Brand */}
-          <div>
-            <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-(--muted)">
-              Portfolio
-            </p>
-            <h2 className="text-2xl font-bold text-(--text)">
-              Jhyne's{" "}
-              <span className="bg-linear-to-r from-[#00d4ff] to-[#a855f7] bg-clip-text text-transparent">
-                Space
-              </span>
-            </h2>
-            <p className="mt-3 max-w-xs text-sm leading-6 text-(--muted)">
-              Turning ideas into real-world digital solutions. IT student. Mobile & web developer. Community advocate.
-            </p>
-          </div>
-
-          {/* Navigation */}
-          <div>
-            <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.28em] text-(--muted)">
-              Navigation
-            </p>
-            <nav className="flex flex-col gap-2">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.label}
-                  to={link.to}
-                  className="w-fit text-sm font-medium text-(--muted) transition-all duration-200 hover:text-[#00d4ff]"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
-          </div>
-
-          {/* Connect */}
-          <div>
-            <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.28em] text-(--muted)">
-              Connect
-            </p>
-            <div className="flex flex-col gap-3">
-              {socialLinks.map((social) => (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  target={social.href.startsWith("mailto") ? undefined : "_blank"}
-                  rel="noopener noreferrer"
-                  className="group inline-flex w-fit items-center gap-2 rounded-full border border-(--border) bg-(--glass) backdrop-blur-sm px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.24em] text-(--muted) transition-all duration-200 hover:border-[#00d4ff]/50 hover:text-[#00d4ff] hover:shadow-[0_0_12px_rgba(0,212,255,0.2)]"
-                >
-                  {social.icon}
-                  {social.label}
-                </a>
-              ))}
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      {/* Bottom bar */}
-      <div className="border-t border-(--border) bg-(--base) px-4 py-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col items-center justify-between gap-3 sm:flex-row">
-
-          {/* Stat strip */}
-          <div className="flex items-center gap-4">
-            {[
-              { value: "5", label: "Projects" },
-              { value: "10+", label: "Technologies" },
-              { value: "100%", label: "Commitment" },
-            ].map((stat) => (
-              <div key={stat.label} className="flex items-baseline gap-1">
-                <span className="bg-linear-to-r from-[#00d4ff] to-[#a855f7] bg-clip-text text-sm font-bold text-transparent">
-                  {stat.value}
-                </span>
-                <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-(--muted)">
-                  {stat.label}
-                </span>
-              </div>
+      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-[1.4fr_1fr_1fr] lg:px-8">
+        <div>
+          <BrandMark />
+          <p className="mt-4 max-w-sm text-sm leading-6 text-(--muted)">
+            {profile.title} in the {profile.location}, building toward a career in technology project management, software development, and QA.
+          </p>
+          <div className="mt-5 flex gap-2">
+            {socials.map((s) => (
+              <a
+                key={s.label}
+                href={s.href}
+                target={s.href.startsWith("mailto") ? undefined : "_blank"}
+                rel="noopener noreferrer"
+                aria-label={s.label}
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-(--border) text-(--muted) transition-colors hover:border-(--accent-ring) hover:text-(--accent)"
+              >
+                {s.icon}
+              </a>
             ))}
           </div>
+        </div>
 
-          {/* Copyright */}
-          <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-(--muted)">
-            © {currentYear} 
-          </p>
+        <nav aria-label="Footer sections">
+          <p className="mb-4 font-mono text-xs uppercase tracking-[0.18em] text-(--subtle)">Sections</p>
+          <ul className="flex flex-col gap-2.5">
+            {sections.map((l) => (
+              <li key={l.label}><Link to={l.to} className={linkClass}>{l.label}</Link></li>
+            ))}
+          </ul>
+        </nav>
 
+        <nav aria-label="Footer resources">
+          <p className="mb-4 font-mono text-xs uppercase tracking-[0.18em] text-(--subtle)">Resources</p>
+          <ul className="flex flex-col gap-2.5">
+            {resources.map((r) => (
+              <li key={r.label}>
+                {r.to
+                  ? <Link to={r.to} className={linkClass}>{r.label}</Link>
+                  : <a href={r.href} target="_blank" rel="noopener noreferrer" className={linkClass}>{r.label}</a>}
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+
+      <div className="border-t border-(--border)">
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-4 py-5 text-xs text-(--subtle) sm:flex-row sm:px-6 lg:px-8">
+          <p>© {currentYear} {profile.name}</p>
+          <div className="flex items-center gap-5">
+            <Link to="/auth/signin" className="transition-colors hover:text-(--accent)">Admin</Link>
+            <a href="#top" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0 }); }} className="inline-flex items-center gap-1 transition-colors hover:text-(--accent)">
+              Back to top <ArrowUp className="h-3 w-3" />
+            </a>
+          </div>
         </div>
       </div>
     </footer>

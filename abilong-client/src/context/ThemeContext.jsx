@@ -9,9 +9,9 @@ const ThemeProvider = ({ children }) => {
     try {
       const saved = localStorage.getItem('theme');
       if (saved) return saved === 'dark';
-      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+      return true; // dark by default; the toggle remembers the visitor's choice
     } catch {
-      return false;
+      return true;
     }
   });
 

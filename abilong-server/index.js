@@ -1,18 +1,18 @@
-require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db");
+const { PORT } = require("./config/config");
 const userRoutes = require("./routes/userRoutes");
 const articleRoutes = require("./routes/articleRoutes");
+const mediaRoutes = require("./routes/mediaRoutes");
+const portfolioRoutes = require("./routes/portfolioRoutes");
 
 const app = express();
 
-// Connect once per serverless instance
 connectDB().catch((err) => {
   console.error("MongoDB connection error:", err);
 });
 
-// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -33,11 +33,17 @@ app.use(cors(corsOptions));
 
 app.use("/api/users", userRoutes);
 app.use("/api/articles", articleRoutes);
+app.use("/api/media", mediaRoutes);
+app.use("/api/portfolio", portfolioRoutes);
 
-// Error handler
 app.use((err, req, res, next) => {
   console.error(err.stack || err);
   res.status(err.status || 500).json({ message: err.message || "Server Error" });
 });
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
 
 module.exports = app;

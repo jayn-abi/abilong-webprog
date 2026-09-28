@@ -4,7 +4,7 @@ import Button from '../../components/Button';
 import { loginUser } from '../../services/UserService';
 
 const inputClasses =
-  'mt-2 w-full rounded-2xl border border-(--border) bg-(--glass) backdrop-blur-sm px-4 py-3 text-sm text-(--text) outline-none transition-all duration-200 placeholder:text-(--muted) focus:border-[#00d4ff]/60 focus:shadow-[0_0_0_3px_rgba(0,212,255,0.10)] focus:bg-(--card)';
+  'mt-2 w-full rounded-2xl border border-(--border) bg-(--glass) backdrop-blur-sm px-4 py-3 text-sm text-(--text) outline-none transition-all duration-200 placeholder:text-(--muted) focus:border-(--accent-ring) focus:shadow-[0_0_0_3px_var(--accent-soft)] focus:bg-(--card)';
 
 const SignInPage = () => {
   const navigate = useNavigate();
@@ -90,7 +90,7 @@ const SignInPage = () => {
 
       <div className="mt-8 border-t border-(--border) pt-6 text-sm text-(--muted)">
         No account yet?{' '}
-        <Link to="/auth/signup" className="font-semibold text-[#00d4ff] transition hover:text-[#a855f7]">
+        <Link to="/auth/signup" className="font-semibold text-(--accent) transition hover:text-(--accent-strong)">
           Sign Up
         </Link>
       </div>

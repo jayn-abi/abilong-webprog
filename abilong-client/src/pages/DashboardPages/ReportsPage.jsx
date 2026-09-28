@@ -219,7 +219,7 @@ const ReportsPage = () => {
                     boxShadow: '0 1px 4px rgba(15,15,26,0.04)',
                 }}
             >
-                <Stack direction="row" alignItems="center" gap={2}>
+                <Stack direction="row" gap={2} sx={{ alignItems: 'center' }}>
                     <Typography
                         variant="h5"
                         sx={{ flex: 1, fontWeight: 800, color: '#0f0f1a', letterSpacing: '-0.5px' }}

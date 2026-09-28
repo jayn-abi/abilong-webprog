@@ -21,17 +21,27 @@ import PeopleIcon from '@mui/icons-material/People';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import LogoutIcon from '@mui/icons-material/Logout';
+import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
+import WorkOutlineIcon from '@mui/icons-material/WorkOutlineOutlined';
+import WorkspacePremiumOutlinedIcon from '@mui/icons-material/WorkspacePremiumOutlined';
 import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
+import { ThemeProvider } from '@mui/material/styles';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import adminTheme from '../components/admin/adminTheme';
 import { useEffect } from 'react';
 
 const drawerWidth = 240;
 const miniWidth = 56;
 
 const ALL_NAV_ITEMS = [
-    { label: 'Dashboard', title: 'Dashboard', to: '/dashboard',          icon: DashboardIcon,       types: ['admin', 'editor'] },
-    { label: 'Reports',   title: 'Reports',   to: '/dashboard/reports',  icon: AssessmentIcon,      types: ['admin', 'editor'] },
-    { label: 'Articles',  title: 'Articles',  to: '/dashboard/articles', icon: ArticleOutlinedIcon, types: ['admin', 'editor'] },
-    { label: 'Users',     title: 'Users',     to: '/dashboard/users',    icon: PeopleIcon,          types: ['admin'] },
+    { group: 'Overview',  label: 'Dashboard',      title: 'Dashboard',      to: '/dashboard',                icon: DashboardIcon,                types: ['admin', 'editor'] },
+    { group: 'Portfolio', label: 'Site content',   title: 'Site content',   to: '/dashboard/content',        icon: EditNoteOutlinedIcon,         types: ['admin'] },
+    { group: 'Portfolio', label: 'Projects',       title: 'Projects',       to: '/dashboard/projects',       icon: WorkOutlineIcon,              types: ['admin'] },
+    { group: 'Portfolio', label: 'Certifications', title: 'Certifications', to: '/dashboard/certifications', icon: WorkspacePremiumOutlinedIcon, types: ['admin'] },
+    { group: 'Manage',    label: 'Articles',       title: 'Articles',       to: '/dashboard/articles',       icon: ArticleOutlinedIcon,          types: ['admin', 'editor'] },
+    { group: 'Manage',    label: 'Reports',        title: 'Reports',        to: '/dashboard/reports',        icon: AssessmentIcon,               types: ['admin', 'editor'] },
+    { group: 'Manage',    label: 'Users',          title: 'Users',          to: '/dashboard/users',          icon: PeopleIcon,                   types: ['admin'] },
 ];
 
 /* ── Drawer animations ── */
@@ -122,7 +132,9 @@ const DashLayout = () => {
     const navigate = useNavigate();
     const userType  = localStorage.getItem('type') ?? '';
     const NAV_ITEMS = ALL_NAV_ITEMS.filter((item) => item.types.includes(userType));
-    const pageTitle = NAV_ITEMS.find((item) => item.to === location.pathname)?.title ?? 'Dashboard';
+    const groups = [...new Set(NAV_ITEMS.map((item) => item.group))];
+    const firstName = localStorage.getItem('firstName') ?? '';
+    const pageTitle = `${NAV_ITEMS.find((item) => item.to === location.pathname)?.title ?? 'Dashboard'} — Admin`;
 
     const handleLogout = () => {
         localStorage.removeItem('token');
@@ -136,6 +148,7 @@ const DashLayout = () => {
     }, [pageTitle]);
 
     return (
+        <ThemeProvider theme={adminTheme}>
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
 
@@ -160,6 +173,10 @@ const DashLayout = () => {
                     </Typography>
 
                     <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                        {firstName && <Typography variant="body2" color="text.secondary" sx={{ display: { xs: 'none', md: 'block' } }}>Hi, {firstName}</Typography>}
+                        <Button size="small" href="/" target="_blank" endIcon={<OpenInNewIcon fontSize="small" />} sx={{ display: { xs: 'none', sm: 'inline-flex' } }}>
+                            View site
+                        </Button>
                         <Button
                             size="small"
                             variant="outlined"
@@ -214,13 +231,18 @@ const DashLayout = () => {
 
                 <Divider sx={{ borderColor: 'rgba(15,15,26,0.06)' }} />
 
-                <List sx={{ px: 1, pt: 1.5 }}>
-                    {NAV_ITEMS.map((item) => {
+                {groups.map((group, gi) => (
+                <List key={group} sx={{ px: 1, pt: gi === 0 ? 1.5 : 0.5 }}>
+                    {open
+                        ? <Typography sx={{ px: 1.5, pt: gi === 0 ? 0 : 1, pb: 0.75, fontSize: 11, fontWeight: 700, color: 'rgba(15,15,26,0.45)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{group}</Typography>
+                        : gi > 0 && <Divider sx={{ mx: 1, mb: 1, borderColor: 'rgba(15,15,26,0.08)' }} />}
+                    {NAV_ITEMS.filter((item) => item.group === group).map((item) => {
                         const NavIcon = item.icon;
                         const { label, to } = item;
                         const active = location.pathname === to;
                         return (
                             <ListItem key={label} disablePadding sx={{ display: 'block', mb: 0.5 }}>
+                                <Tooltip title={open ? '' : label} placement="right">
                                 <ListItemButton
                                     component={Link}
                                     to={to}
@@ -233,11 +255,11 @@ const DashLayout = () => {
                                         transition: 'all 0.15s ease',
                                         '&.Mui-selected': {
                                             background: 'linear-gradient(135deg, rgba(0,212,255,0.13) 0%, rgba(168,85,247,0.09) 100%)',
-                                            color: '#00b8d9',
+                                            color: '#0891b2',
                                             '&:hover': {
                                                 background: 'linear-gradient(135deg, rgba(0,212,255,0.20) 0%, rgba(168,85,247,0.14) 100%)',
                                             },
-                                            '& .MuiListItemIcon-root': { color: '#00b8d9' },
+                                            '& .MuiListItemIcon-root': { color: '#0891b2' },
                                         },
                                         '&:hover:not(.Mui-selected)': {
                                             bgcolor: 'rgba(15, 15, 26, 0.04)',
@@ -249,7 +271,7 @@ const DashLayout = () => {
                                             minWidth: 0,
                                             mr: open ? 2.5 : 0,
                                             justifyContent: 'center',
-                                            color: active ? '#00b8d9' : 'rgba(15,15,26,0.42)',
+                                            color: active ? '#0891b2' : 'rgba(15,15,26,0.42)',
                                             transition: 'color 0.15s ease',
                                         }}
                                     >
@@ -257,18 +279,20 @@ const DashLayout = () => {
                                     </ListItemIcon>
                                     <ListItemText
                                         primary={label}
-                                        primaryTypographyProps={{
+                                        slotProps={{ primary: { sx: {
                                             fontWeight: active ? 600 : 500,
                                             fontSize: 13.5,
-                                            color: active ? '#00b8d9' : '#0f0f1a',
-                                        }}
+                                            color: active ? '#0891b2' : '#0f0f1a',
+                                        } } }}
                                         sx={{ display: open ? 'block' : 'none' }}
                                     />
                                 </ListItemButton>
+                                </Tooltip>
                             </ListItem>
                         );
                     })}
                 </List>
+                ))}
             </Drawer>
 
            
@@ -276,7 +300,8 @@ const DashLayout = () => {
                 component="main"
                 sx={{
                     flexGrow: 1,
-                    p: 3,
+                    p: { xs: 2, sm: 3 },
+                    minWidth: 0,
                     minHeight: '100vh',
                     backgroundColor: '#f5f5fa',
                     color: '#0f0f1a',
@@ -286,6 +311,7 @@ const DashLayout = () => {
                 <Outlet />
             </Box>
         </Box>
+        </ThemeProvider>
     );
 };
 

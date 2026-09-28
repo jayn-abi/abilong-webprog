@@ -49,7 +49,7 @@ const ArticlePage = () => {
           </div>
 
           <div className="absolute bottom-0 left-0 right-0 px-4 pb-8 sm:px-8 sm:pb-10 lg:px-12">
-            <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-[#00d4ff]">
+            <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-(--accent)">
               {article.tag || 'General'}
             </p>
             <h1 className="max-w-3xl text-3xl font-bold leading-tight text-white sm:text-4xl lg:text-5xl">
@@ -64,7 +64,7 @@ const ArticlePage = () => {
           <p className="mb-8 text-lg font-medium leading-8 text-(--text) sm:text-xl sm:leading-9">
             {content[0]}
           </p>
-          <div className="mb-8 h-px w-16 bg-linear-to-r from-[#00d4ff] to-[#a855f7]" />
+          <div className="mb-8 h-px w-16 bg-linear-to-r from-(--accent) to-(--accent-strong)" />
           <div className="space-y-5">
             {content.slice(1).map((paragraph, index) => (
               <p key={index} className="text-sm leading-7 text-(--muted) sm:text-base sm:leading-8">

@@ -25,8 +25,8 @@ const AuthLayout = () => {
         
         <div className="hidden lg:flex items-center justify-center bg-(--card) border-r border-(--border) p-16 relative overflow-hidden">
           
-          <div className="absolute top-1/4 left-1/4 w-72 h-72 rounded-full bg-[#00d4ff]/8 blur-3xl pointer-events-none" />
-          <div className="absolute bottom-1/4 right-1/4 w-72 h-72 rounded-full bg-[#a855f7]/8 blur-3xl pointer-events-none" />
+          <div className="absolute top-1/4 left-1/4 w-72 h-72 rounded-full bg-(--accent)/8 blur-3xl pointer-events-none" />
+          <div className="absolute bottom-1/4 right-1/4 w-72 h-72 rounded-full bg-(--accent-strong)/8 blur-3xl pointer-events-none" />
 
           <div className="relative z-10 flex w-full max-w-xs flex-col items-center text-center">
            

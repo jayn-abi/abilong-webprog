@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { SECRET_KEY } = require('../config/config');
 
 const protect = (req, res, next) => {
   const auth = req.headers.authorization;
@@ -6,7 +7,7 @@ const protect = (req, res, next) => {
     return res.status(401).json({ message: 'Not authorized, no token' });
 
   try {
-    req.user = jwt.verify(auth.split(' ')[1], process.env.JWT_SECRET);
+    req.user = jwt.verify(auth.split(' ')[1], SECRET_KEY);
     next();
   } catch {
     res.status(401).json({ message: 'Token invalid or expired' });
