@@ -212,7 +212,7 @@ export const LaundryMockup = () => (
 /* ── Portfolio dashboard ─────────────────────────────────────── */
 
 export const DashboardMockup = () => (
-  <BrowserFrame url="abilong-client.vercel.app/dashboard">
+  <BrowserFrame url="abilong-portfolio.vercel.app/dashboard">
     <div className="grid h-full grid-cols-[4.5rem_1fr]">
       <aside className="flex flex-col gap-2 border-r border-(--border) p-2">
         {['Dashboard', 'Reports', 'Articles', 'Users'].map((item, i) => (

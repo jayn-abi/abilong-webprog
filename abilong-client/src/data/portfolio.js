@@ -154,7 +154,7 @@ export const projects = [
     media: { web: 'portfolio-cms', mobile: 'portfolio-cms-mobile', logo: 'portfolio-cms-logo' },
     mockup: 'dashboard',
     github: 'https://github.com/jayn-abi/abilong-webprog',
-    demo: 'https://abilong-client.vercel.app',
+    demo: 'https://abilong-portfolio.vercel.app',
   },
 ];
 
