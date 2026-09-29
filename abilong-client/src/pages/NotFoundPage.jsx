@@ -44,9 +44,9 @@ function NotFoundPage() {
           <div className="mt-6 flex justify-center gap-4 text-sm text-(--muted)">
             <Link to="/" className="hover:text-(--accent) transition-colors">Home</Link>
             <span>•</span>
-            <Link to="/about" className="hover:text-(--accent) transition-colors">About</Link>
+            <Link to="/#about" className="hover:text-(--accent) transition-colors">About</Link>
             <span>•</span>
-            <Link to="/projects" className="hover:text-(--accent) transition-colors">Projects</Link>
+            <Link to="/#projects" className="hover:text-(--accent) transition-colors">Projects</Link>
           </div>
 
         </div>

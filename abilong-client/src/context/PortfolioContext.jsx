@@ -78,7 +78,12 @@ export const PortfolioProvider = ({ children }) => {
     return () => { active = false; };
   }, []);
 
+  // `content` has everything (for the dashboard); `publicContent` leaves out archived projects
   const content = useMemo(() => mergeContent(remote), [remote]);
+  const publicContent = useMemo(() => {
+    const projects = content.projects.filter((p) => !p.archived);
+    return { ...content, projects, featuredProject: projects.find((p) => p.featured) ?? null };
+  }, [content]);
 
   const saveSections = useCallback(async (sections) => {
     const { data } = await updatePortfolio(sections);
@@ -88,11 +93,11 @@ export const PortfolioProvider = ({ children }) => {
   }, []);
 
   return (
-    <PortfolioContext.Provider value={{ content, loaded, saveSections }}>
+    <PortfolioContext.Provider value={{ content, publicContent, loaded, saveSections }}>
       {children}
     </PortfolioContext.Provider>
   );
 };
 
-export const usePortfolio = () => useContext(PortfolioContext).content;
+export const usePortfolio = () => useContext(PortfolioContext).publicContent;
 export const usePortfolioAdmin = () => useContext(PortfolioContext);

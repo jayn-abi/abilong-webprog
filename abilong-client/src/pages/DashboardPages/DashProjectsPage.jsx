@@ -1,6 +1,8 @@
 import { Alert, Box, Button, Divider, FormControlLabel, Stack, Switch, Typography } from '@mui/material';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import StarRoundedIcon from '@mui/icons-material/StarRounded';
+import ArchiveOutlinedIcon from '@mui/icons-material/ArchiveOutlined';
+import UnarchiveOutlinedIcon from '@mui/icons-material/UnarchiveOutlined';
 import EditorShell, { FieldGroup, Grid2, SectionCard, WhenLoaded, newId, useDraft } from '../../components/admin/EditorShell';
 import RepeatableList from '../../components/admin/RepeatableList';
 import ImageUploader from '../../components/admin/ImageUploader';
@@ -23,7 +25,7 @@ const slotsOf = (d) => d.projects.flatMap(allSlots);
 // Projects are one list now; retire the old separate "featured project" section
 const toPayload = (d) => ({ projects: d.projects, featuredProject: { retired: true } });
 
-const ProjectFields = ({ project: p, update, setFeatured, savedIds }) => (
+const ProjectFields = ({ project: p, update, setFeatured, toggleArchived, savedIds }) => (
     <Stack spacing={3.5}>
         <Box sx={{ display: 'grid', gap: 3.5, gridTemplateColumns: { xs: '1fr', lg: '1.35fr 1fr' } }}>
             <Stack spacing={3.5}>
@@ -90,21 +92,38 @@ const ProjectFields = ({ project: p, update, setFeatured, savedIds }) => (
 
         <Divider />
 
+        {p.archived && (
+            <Alert severity="warning">This project is archived — it's hidden from the site (including its case-study page). Unarchive it to show it again.</Alert>
+        )}
+
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ alignItems: { sm: 'center' }, justifyContent: 'space-between' }}>
             <FormControlLabel
-                control={<Switch checked={p.featured} onChange={(e) => e.target.checked && setFeatured(p.id)} />}
+                disabled={p.archived}
+                control={<Switch checked={p.featured && !p.archived} onChange={(e) => e.target.checked && setFeatured(p.id)} />}
                 label={
                     <Box>
                         <Typography variant="body2" fontWeight={600}>Featured project</Typography>
-                        <Typography variant="caption" color="text.secondary">Shown large on the Projects page and in the home-page hero. Only one project can be featured.</Typography>
+                        <Typography variant="caption" color="text.secondary">
+                            {p.archived ? 'Archived projects can’t be featured.' : 'Shown large on the Projects page and in the home-page hero. Only one project can be featured.'}
+                        </Typography>
                     </Box>
                 }
             />
-            {savedIds.has(p.id) && (
-                <Button href={`/projects/${p.id}`} target="_blank" endIcon={<OpenInNewIcon fontSize="small" />} sx={{ flexShrink: 0 }}>
-                    View case study
+            <Stack direction="row" spacing={1} sx={{ flexShrink: 0 }}>
+                {savedIds.has(p.id) && !p.archived && (
+                    <Button href={`/projects/${p.id}`} target="_blank" endIcon={<OpenInNewIcon fontSize="small" />}>
+                        View case study
+                    </Button>
+                )}
+                <Button
+                    variant="outlined"
+                    color={p.archived ? 'primary' : 'warning'}
+                    startIcon={p.archived ? <UnarchiveOutlinedIcon /> : <ArchiveOutlinedIcon />}
+                    onClick={() => toggleArchived(p.id)}
+                >
+                    {p.archived ? 'Unarchive' : 'Archive'}
                 </Button>
-            )}
+            </Stack>
         </Stack>
     </Stack>
 );
@@ -118,14 +137,29 @@ const ProjectsEditor = () => {
 
     const setFeatured = (id) => set('projects', (list) => list.map((p) => ({ ...p, featured: p.id === id })));
 
+    // Archiving the featured project hands "featured" to the first visible project
+    const toggleArchived = (id) => set('projects', (list) => {
+        const next = list.map((p) => (p.id === id ? { ...p, archived: !p.archived, featured: p.archived && p.featured } : p));
+        if (!next.some((p) => p.featured && !p.archived)) {
+            const first = next.findIndex((p) => !p.archived);
+            if (first !== -1) next[first] = { ...next[first], featured: true };
+        }
+        return next;
+    });
+
+    const visible = draft.projects.filter((p) => !p.archived);
+
     return (
         <EditorShell
             title="Projects"
-            description="Every project gets its own case-study page. Images upload instantly; text changes go live when you save."
+            description="Every project gets its own case-study page. Photos are saved with their own Save photo button; other changes, including archiving, go live when you save."
             editor={editor}
-            viewHref="/projects"
+            viewHref="/#projects"
         >
-            {!draft.projects.some((p) => p.featured) && draft.projects.length > 0 && (
+            {draft.projects.length > 0 && !visible.length && (
+                <Alert severity="warning" sx={{ mb: 2.5 }}>All projects are archived — the Projects page will be empty.</Alert>
+            )}
+            {visible.length > 0 && !visible.some((p) => p.featured) && (
                 <Alert severity="info" sx={{ mb: 2.5 }}>No project is marked as featured — the first one will be featured.</Alert>
             )}
 
@@ -142,12 +176,13 @@ const ProjectsEditor = () => {
                         avatar: projectLogoSrc(p, media, 96) ?? '',
                         subtitle: [p.tagline, p.role].filter(Boolean).join(' · ') || 'No details yet',
                         chips: [
-                            p.featured && { label: 'Featured', color: 'secondary', variant: 'filled', icon: <StarRoundedIcon /> },
-                            !media[p.media.web]?.url && { label: 'No screenshot', color: 'warning' },
+                            p.archived && { label: 'Archived', color: 'default', variant: 'filled', icon: <ArchiveOutlinedIcon /> },
+                            p.featured && !p.archived && { label: 'Featured', color: 'secondary', variant: 'filled', icon: <StarRoundedIcon /> },
+                            !p.archived && !media[p.media.web]?.url && { label: 'No screenshot', color: 'warning' },
                             !savedIds.has(p.id) && { label: 'Not saved yet', color: 'info' },
                         ].filter(Boolean),
                     })}
-                    renderItem={(p, update) => <ProjectFields project={p} update={update} setFeatured={setFeatured} savedIds={savedIds} />}
+                    renderItem={(p, update) => <ProjectFields project={p} update={update} setFeatured={setFeatured} toggleArchived={toggleArchived} savedIds={savedIds} />}
                 />
             </SectionCard>
         </EditorShell>

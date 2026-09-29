@@ -22,7 +22,7 @@ const ProjectDetailPage = () => {
       <section className="px-4 py-28 text-center sm:px-6">
         <h1 className="text-3xl font-bold text-(--text)">Project not found</h1>
         <p className="mt-3 text-(--muted)">It may have been renamed or removed.</p>
-        <div className="mt-8"><Button to="/projects">Back to projects</Button></div>
+        <div className="mt-8"><Button to="/#projects">Back to projects</Button></div>
       </section>
     );
   }
@@ -30,7 +30,7 @@ const ProjectDetailPage = () => {
   return (
     <section className="px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
       <div className="mx-auto max-w-6xl">
-        <Link to="/projects" className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-(--muted) transition-colors hover:text-(--accent)">
+        <Link to="/#projects" className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-(--muted) transition-colors hover:text-(--accent)">
           <ArrowLeft className="h-4 w-4" /> All projects
         </Link>
         <div className="mt-6">

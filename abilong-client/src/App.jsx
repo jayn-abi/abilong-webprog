@@ -9,12 +9,8 @@ import PrivateRoute from "./components/PrivateRoute";
 import Layout from "./layouts/Layout";
 import ArticlePage from './pages/LandingPages/ArticlePage';
 import HomePage from './pages/LandingPages/HomePage';
-import AboutPage from './pages/LandingPages/AboutPage';
-import ProjectsPage from './pages/LandingPages/ProjectsPage';
 import ProjectDetailPage from './pages/LandingPages/ProjectDetailPage';
-import SkillsPage from './pages/LandingPages/SkillsPage';
-import ExperiencePage from './pages/LandingPages/ExperiencePage';
-import ContactPage from './pages/LandingPages/ContactPage';
+import SectionRedirect from './pages/LandingPages/SectionRedirect';
 import NotFoundPage from './pages/NotFoundPage';
 import ArticleListPage from './pages/LandingPages/ArticleListPage';
 
@@ -43,12 +39,12 @@ const routes = [
     errorElement: <NotFoundPage />,
     children: [
       { path: '/',            element: <HomePage /> },
-      { path: '/about',       element: <AboutPage /> },
-      { path: '/projects',    element: <ProjectsPage /> },
       { path: '/projects/:id', element: <ProjectDetailPage /> },
-      { path: '/skills',      element: <SkillsPage /> },
-      { path: '/experience',  element: <ExperiencePage /> },
-      { path: '/contact',     element: <ContactPage /> },
+      // Former pages, now sections of the home page
+      ...['about', 'projects', 'skills', 'experience', 'contact'].map((section) => ({
+        path: `/${section}`,
+        element: <SectionRedirect section={section} />,
+      })),
       { path: '/articles',    element: <ArticleListPage /> },
       { path: '/articles/:id', element: <ArticlePage /> },
     ],

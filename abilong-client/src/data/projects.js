@@ -22,6 +22,7 @@ export const blankProject = {
   github: '',
   demo: '',
   featured: false,
+  archived: false,
   mockup: '',
   media: {},
 };
@@ -44,9 +45,11 @@ export const normalizeProject = (p) => {
   };
 };
 
-// Exactly one project is featured: the first one flagged, else the first project.
+// Exactly one project is featured: the first visible one flagged, else the
+// first visible project (archived projects are hidden from the site).
 const ensureOneFeatured = (list) => {
-  const index = Math.max(0, list.findIndex((p) => p.featured));
+  const flagged = list.findIndex((p) => p.featured && !p.archived);
+  const index = Math.max(0, flagged !== -1 ? flagged : list.findIndex((p) => !p.archived));
   return list.map((p, i) => ({ ...p, featured: i === index }));
 };
 

@@ -1,15 +1,14 @@
-import { Alert, Box, Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import EditorShell, { Grid2, SectionCard, WhenLoaded, newId, useDraft } from '../../components/admin/EditorShell';
 import RepeatableList from '../../components/admin/RepeatableList';
 import ImageUploader from '../../components/admin/ImageUploader';
-import { Text, UrlField, SelectField, TagsField } from '../../components/admin/fields';
-import { certificationTypes } from '../../data/portfolio';
+import { Text, UrlField, TagsField } from '../../components/admin/fields';
 import { useMedia } from '../../context/MediaContext';
 import { cloudinaryUrl } from '../../services/MediaService';
 
 const blankCert = () => {
     const id = newId('c');
-    return { id, name: '', issuer: '', year: '', type: 'Course completion', link: '', media: `cert-${id.slice(2)}` };
+    return { id, name: '', issuer: '', year: '', link: '', media: `cert-${id.slice(2)}` };
 };
 
 const validate = ({ certifications }) => {
@@ -27,22 +26,18 @@ const CertificationsEditor = () => {
     return (
         <EditorShell
             title="Certifications"
-            description="Credentials on the Skills page. Images upload instantly; text changes go live when you save."
-            viewHref="/skills#certifications"
+            description="Credentials on the Skills page. Photos are saved with their own Save photo button; other changes, including the order, go live when you save."
+            viewHref="/#certifications"
             editor={editor}
         >
-            <Alert severity="info" sx={{ mb: 2.5 }}>
-                Use <b>Certification</b> only for formal, issued certifications. Course and training certificates should use <b>Course completion</b>.
-            </Alert>
-
-            <SectionCard title="Credentials" description="Shown as cards in this order. Click one to edit it. While the list is empty, the site shows your learning track instead.">
+            <SectionCard title="Credentials" description="Shown as cards in this order — drag a row by its handle (or use the arrows) to reorder. Click one to edit it. While the list is empty, the site shows your learning track instead.">
                 <RepeatableList
                     collapsible
+                    sortable
                     renderSummary={(c) => ({
                         avatar: media[c.media]?.url ? cloudinaryUrl(media[c.media].url, 120) : '',
                         subtitle: [c.issuer, c.year].filter(Boolean).join(' · ') || 'No issuer yet',
                         chips: [
-                            c.type && { label: c.type, color: c.type === 'Certification' ? 'primary' : 'default', variant: c.type === 'Certification' ? 'filled' : 'outlined' },
                             !c.link && { label: 'No link', color: 'warning' },
                         ].filter(Boolean),
                     })}
@@ -59,11 +54,10 @@ const CertificationsEditor = () => {
                                 <Text label="Issuing organization" value={c.issuer} onChange={(v) => update({ issuer: v })} />
                                 <Grid2>
                                     <Text label="Year" value={c.year} onChange={(v) => update({ year: v })} slotProps={{ htmlInput: { inputMode: 'numeric', maxLength: 9 } }} />
-                                    <SelectField label="Type" value={c.type} onChange={(v) => update({ type: v })} options={certificationTypes} />
                                 </Grid2>
                                 <UrlField label="Credential link" value={c.link} onChange={(v) => update({ link: v })} helperText="Verification page or the certificate file on Google Drive" />
                             </Stack>
-                            <ImageUploader slot={c.media} label="Certificate image" aspect="4 / 3" hint="Any size — shown in full. A photo or export of the certificate (PNG, JPG, or WebP)." emptyText="No image — the card shows an icon" />
+                            <ImageUploader slot={c.media} label="Certificate image" aspect="4 / 3" hint="Any size — shown in full. A photo or export of the certificate (PNG, JPG, or WebP)." emptyText="No image — the card shows text only" />
                         </Box>
                     )}
                 />

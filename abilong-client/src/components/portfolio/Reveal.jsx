@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 
 /*
- * Fades content up once it scrolls into view. Content is visible
- * immediately when IntersectionObserver is unavailable, and the CSS
- * disables the motion for users who prefer reduced motion.
+ * Fades content up once it scrolls into view. `variant` ("left", "right",
+ * "scale") changes the direction. Content is visible immediately when
+ * IntersectionObserver is unavailable, and the CSS disables the motion for
+ * users who prefer reduced motion.
  */
-const Reveal = ({ as = 'div', delay = 0, className = '', children, ...rest }) => {
+const Reveal = ({ as = 'div', delay = 0, variant, className = '', children, ...rest }) => {
   const Tag = as;
   const ref = useRef(null);
   const [visible, setVisible] = useState(() => typeof IntersectionObserver === 'undefined');
@@ -28,7 +29,7 @@ const Reveal = ({ as = 'div', delay = 0, className = '', children, ...rest }) =>
   return (
     <Tag
       ref={ref}
-      className={`reveal ${visible ? 'is-visible' : ''} ${className}`}
+      className={`reveal ${variant ? `reveal-${variant}` : ''} ${visible ? 'is-visible' : ''} ${className}`}
       style={delay ? { '--reveal-delay': `${delay}ms` } : undefined}
       {...rest}
     >

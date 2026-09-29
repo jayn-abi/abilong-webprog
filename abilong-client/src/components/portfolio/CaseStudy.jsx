@@ -41,8 +41,9 @@ const PreviewTag = ({ slots }) => {
 /*
  * Full case study for any project: web + mobile visual, summary, facts,
  * technologies, links, and responsibilities. Empty fields are skipped.
+ * `summary` leaves out the responsibilities and links to the project's page.
  */
-export const CaseStudy = ({ project: p, eyebrow, headingLevel = 'h3' }) => {
+export const CaseStudy = ({ project: p, eyebrow, headingLevel = 'h3', summary = false }) => {
   const Heading = headingLevel;
   const facts = [
     ['Project', p.name],
@@ -53,7 +54,7 @@ export const CaseStudy = ({ project: p, eyebrow, headingLevel = 'h3' }) => {
   ].filter(([, v]) => v);
 
   return (
-    <Reveal as="article" id={`project-${p.id}`} className="group overflow-hidden rounded-3xl border border-(--border) bg-(--card) shadow-(--shadow-card)">
+    <Reveal as="article" variant="scale" id={`project-${p.id}`} className="group spotlight overflow-hidden rounded-3xl border border-(--border) bg-(--card) shadow-(--shadow-card)">
       <div className="grid lg:grid-cols-[1.25fr_1fr]">
         <div className="relative overflow-hidden border-b border-(--border) bg-(--elevated)/60 p-6 sm:p-10 lg:flex lg:items-center lg:border-b-0 lg:border-r">
           <div className="grid-backdrop pointer-events-none absolute inset-0 opacity-60" aria-hidden="true" />
@@ -85,18 +86,23 @@ export const CaseStudy = ({ project: p, eyebrow, headingLevel = 'h3' }) => {
           )}
 
           {p.tech.length > 0 && (
-            <ul className="mt-5 flex flex-wrap gap-2" aria-label="Technologies">
-              {p.tech.map((t) => <li key={t}><Chip>{t}</Chip></li>)}
+            <ul className="stagger mt-5 flex flex-wrap gap-2" aria-label="Technologies">
+              {p.tech.map((t, i) => <li key={t} style={{ '--i': i }}><Chip>{t}</Chip></li>)}
             </ul>
           )}
 
-          <div className="mt-auto pt-6">
+          <div className="mt-auto flex flex-wrap items-center gap-x-5 pt-6">
+            {summary && (
+              <Link to={`/projects/${p.id}`} className="inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-(--accent) transition-colors hover:text-(--text)">
+                Read the full case study <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+              </Link>
+            )}
             <ProjectLinks github={p.github} demo={p.demo} name={p.name} />
           </div>
         </div>
       </div>
 
-      {p.responsibilities.length > 0 && (
+      {!summary && p.responsibilities.length > 0 && (
         <div className="border-t border-(--border) p-6 sm:p-10">
           <h4 className="font-mono text-xs uppercase tracking-[0.16em] text-(--subtle)">My responsibilities</h4>
           <ul className="mt-5 grid gap-x-8 gap-y-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -121,7 +127,7 @@ export const ProjectCard = ({ project, delay = 0 }) => {
   const Mockup = mockups[project.mockup];
   const to = `/projects/${project.id}`;
   return (
-    <Reveal as="article" delay={delay} className="group card-lift relative flex flex-col overflow-hidden rounded-2xl border border-(--border) bg-(--card) shadow-(--shadow-card)">
+    <Reveal as="article" delay={delay} className="group spotlight card-lift relative flex flex-col overflow-hidden rounded-2xl border border-(--border) bg-(--card) shadow-(--shadow-card)">
       <Link to={to} tabIndex={-1} aria-hidden="true" className="relative block overflow-hidden border-b border-(--border) bg-(--elevated)/60 p-5">
         <PreviewTag slots={[project.media.web]} />
         <div className="aspect-[16/10]">
@@ -144,9 +150,9 @@ export const ProjectCard = ({ project, delay = 0 }) => {
         )}
 
         {project.tech.length > 0 && (
-          <ul className="mt-4 flex flex-wrap gap-1.5" aria-label="Technologies">
-            {project.tech.slice(0, 6).map((t) => <li key={t}><Chip>{t}</Chip></li>)}
-            {project.tech.length > 6 && <li><Chip>+{project.tech.length - 6}</Chip></li>}
+          <ul className="stagger mt-4 flex flex-wrap gap-1.5" aria-label="Technologies">
+            {project.tech.slice(0, 6).map((t, i) => <li key={t} style={{ '--i': i }}><Chip>{t}</Chip></li>)}
+            {project.tech.length > 6 && <li style={{ '--i': 6 }}><Chip>+{project.tech.length - 6}</Chip></li>}
           </ul>
         )}
 

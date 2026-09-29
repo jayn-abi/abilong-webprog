@@ -32,6 +32,7 @@ const Section = ({ id, index, eyebrow, title, intro, alt = false, className = ''
       {title && (
         <Reveal className="mb-12 max-w-2xl">
           <Eyebrow>
+            <span className="eyebrow-line" aria-hidden="true" />
             {index && <span className="text-(--subtle)">{index} / </span>}
             {eyebrow}
           </Eyebrow>

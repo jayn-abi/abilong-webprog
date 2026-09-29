@@ -3,25 +3,25 @@ import { Mail, ArrowUp } from "lucide-react";
 import { BrandMark } from "./NavBar";
 import { GithubIcon, LinkedinIcon } from "./portfolio/icons";
 import { usePortfolio } from "../context/PortfolioContext";
+import { useLinks } from "../data/documents";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
-  const { profile, links } = usePortfolio();
+  const { profile } = usePortfolio();
+  const links = useLinks();
 
   const sections = [
-    { label: "About", to: "/about" },
-    { label: "Projects", to: "/projects" },
-    { label: "Skills", to: "/skills" },
-    { label: "Experience", to: "/experience" },
-    { label: "Contact", to: "/contact" },
+    { label: "About", to: "/#about" },
+    { label: "Projects", to: "/#projects" },
+    { label: "Skills", to: "/#skills" },
+    { label: "Experience", to: "/#experience" },
+    { label: "Contact", to: "/#contact" },
   ];
 
   const resources = [
     { label: "CV", href: links.cv },
     { label: "Transcript of Records", href: links.transcript },
-    links.certificates
-      ? { label: "Certifications", href: links.certificates }
-      : { label: "Certifications", to: "/skills#certifications" },
+    { label: "Certifications", to: "/#certifications" },
     { label: "Video Introduction", href: links.video },
     { label: "Articles", to: "/articles" },
   ].filter((r) => r.to || r.href);
@@ -40,7 +40,7 @@ const Footer = () => {
         <div>
           <BrandMark />
           <p className="mt-4 max-w-sm text-sm leading-6 text-(--muted)">
-            {profile.title} in the {profile.location}, building toward a career in technology project management, software development, and QA.
+            {profile.title} in the {profile.location}, building toward a career in technology project management and QA.
           </p>
           <div className="mt-5 flex gap-2">
             {socials.map((s) => (

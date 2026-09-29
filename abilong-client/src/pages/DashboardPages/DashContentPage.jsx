@@ -3,6 +3,10 @@ import { Box, Stack, Tab, Tabs } from '@mui/material';
 import EditorShell, { Grid2, SectionCard, WhenLoaded, useDraft } from '../../components/admin/EditorShell';
 import RepeatableList from '../../components/admin/RepeatableList';
 import { Text, UrlField, TagsField, ListTextField } from '../../components/admin/fields';
+import DocumentUploader from '../../components/admin/DocumentUploader';
+import ImageUploader from '../../components/admin/ImageUploader';
+import { PROFILE_PHOTO_SLOT } from '../../components/NavBar';
+import { documentSlots } from '../../data/documents';
 
 const KEYS = ['profile', 'links', 'about', 'contact', 'skillGroups', 'experience', 'leadership', 'education'];
 const TABS = ['Profile & links', 'About', 'Skills', 'Experience', 'Education', 'Contact'];
@@ -48,10 +52,15 @@ const ContentEditor = () => {
                 <>
                     <SectionCard title="Profile" description="Your name and positioning in the hero and navigation.">
                         <Stack spacing={2}>
-                            <Grid2>
-                                <Text label="Full name" required value={draft.profile.name} onChange={(v) => profile({ name: v })} />
-                                <Text label="Initials (logo)" value={draft.profile.initials} onChange={(v) => profile({ initials: v })} slotProps={{ htmlInput: { maxLength: 4 } }} />
-                            </Grid2>
+                            <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', sm: '140px 1fr' }, alignItems: 'start' }}>
+                                <Box sx={{ maxWidth: 140 }}>
+                                    <ImageUploader slot={PROFILE_PHOTO_SLOT} label="Photo" aspect="1 / 1" compact emptyText="No photo" />
+                                </Box>
+                                <Stack spacing={2}>
+                                    <Text label="Full name" required value={draft.profile.name} onChange={(v) => profile({ name: v })} />
+                                    <Text label="Initials (logo)" value={draft.profile.initials} onChange={(v) => profile({ initials: v })} slotProps={{ htmlInput: { maxLength: 4 } }} helperText="Shown in the logo badge while no photo is uploaded. The photo is cropped to a circle around your face." />
+                                </Stack>
+                            </Box>
                             <Grid2>
                                 <Text label="Title" value={draft.profile.title} onChange={(v) => profile({ title: v })} />
                                 <Text label="Nav tagline" value={draft.profile.tagline} onChange={(v) => profile({ tagline: v })} />
@@ -71,13 +80,20 @@ const ContentEditor = () => {
                                 <UrlField label="LinkedIn" value={draft.links.linkedin} onChange={(v) => links({ linkedin: v })} />
                                 <UrlField label="GitHub" value={draft.links.github} onChange={(v) => links({ github: v })} />
                             </Grid2>
-                            <UrlField label="CV" value={draft.links.cv} onChange={(v) => links({ cv: v })} helperText="/Abilong-CV.pdf is the file in the site's public folder, or paste a Drive link" />
-                            <Grid2>
-                                <UrlField label="Transcript of Records" value={draft.links.transcript} onChange={(v) => links({ transcript: v })} />
-                                <UrlField label="Certificates folder" value={draft.links.certificates} onChange={(v) => links({ certificates: v })} />
-                            </Grid2>
                             <UrlField label="Video introduction" value={draft.links.video} onChange={(v) => links({ video: v })} />
                         </Stack>
+                    </SectionCard>
+                    <SectionCard title="CV & Transcript of Records" description="Upload a PDF to replace the file on the site; it's saved with its own Save file button. Without an upload, the link underneath is used.">
+                        <Grid2>
+                            <Stack spacing={1.5}>
+                                <DocumentUploader slot={documentSlots.cv} label="Curriculum Vitae" fallbackHref={draft.links.cv} />
+                                <UrlField label="CV link (fallback)" value={draft.links.cv} onChange={(v) => links({ cv: v })} helperText="Used only while no PDF is uploaded" />
+                            </Stack>
+                            <Stack spacing={1.5}>
+                                <DocumentUploader slot={documentSlots.transcript} label="Transcript of Records" fallbackHref={draft.links.transcript} />
+                                <UrlField label="Transcript link (fallback)" value={draft.links.transcript} onChange={(v) => links({ transcript: v })} helperText="Used only while no PDF is uploaded" />
+                            </Stack>
+                        </Grid2>
                     </SectionCard>
                 </>
             )}

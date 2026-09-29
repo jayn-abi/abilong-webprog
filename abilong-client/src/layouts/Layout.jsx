@@ -2,14 +2,10 @@ import { Outlet, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import NavBar from '../components/NavBar';
 import Footer from '../components/Footer';
+import Motion from '../components/portfolio/Motion';
 
 const BASE_TITLE = "Gyrzzel Jhyne Abilong — IT Student · Project Management & QA";
 const PAGE_TITLES = {
-  about: "About",
-  projects: "Projects",
-  skills: "Skills & Certifications",
-  experience: "Experience",
-  contact: "Contact",
   articles: "Articles",
 };
 
@@ -24,7 +20,7 @@ const Layout = () => {
     document.title = page ? `${page} — Gyrzzel Jhyne Abilong` : BASE_TITLE;
   }, [pathname]);
 
-  // New page → top; a hash (e.g. /skills#certifications) → that section
+  // New page → top; a hash (e.g. /#certifications) → that section
   useEffect(() => {
     if (!hash) {
       window.scrollTo({ top: 0 });
@@ -42,6 +38,7 @@ const Layout = () => {
       >
         Skip to content
       </a>
+      <Motion />
       <NavBar />
       <main id="main" className={onHome ? "" : "pt-16"}>
         <Outlet />

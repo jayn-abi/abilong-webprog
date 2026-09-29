@@ -1,9 +1,10 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Alert, Box, Button, CircularProgress, LinearProgress, Stack, Typography } from '@mui/material';
 import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined';
 import { gradientButtonSx } from './adminTheme';
 import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import { useMedia } from '../../context/MediaContext';
 import { uploadToCloudinary, saveMedia, deleteMedia, cloudinaryUrl } from '../../services/MediaService';
 
@@ -49,8 +50,10 @@ export const errorMessage = (err) =>
     ?? 'Something went wrong';
 
 /*
- * Uploads one image to Cloudinary for a media slot — click or drag & drop.
- * Uploads and removals take effect immediately (they don't wait for Save).
+ * Picks one image for a media slot — click or drag & drop. The chosen file is
+ * only previewed locally until "Save photo" uploads it to Cloudinary; until
+ * then (or on Cancel) the previously saved image stays in place.
+ * Removals take effect immediately.
  * `fallbackSrc` is shown (labelled "Default") while nothing is uploaded.
  */
 const ImageUploader = ({ slot, label, hint, aspect = '16 / 10', emptyText = 'No image yet', fallbackSrc, compact = false }) => {
@@ -60,17 +63,27 @@ const ImageUploader = ({ slot, label, hint, aspect = '16 / 10', emptyText = 'No 
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState('');
     const [dragging, setDragging] = useState(false);
+    const [pending, setPending] = useState(null); // { file, previewUrl } — chosen but not saved
     const item = media[slot];
 
-    const upload = async (file) => {
+    useEffect(() => () => pending && URL.revokeObjectURL(pending.previewUrl), [pending]);
+
+    const choose = (file) => {
         if (!file) return;
         if (!ACCEPT.split(',').includes(file.type)) return setError('Please choose a PNG, JPG, or WebP image.');
+        setError('');
+        setPending({ file, previewUrl: URL.createObjectURL(file) });
+    };
 
+    const cancel = () => setPending(null);
+
+    const save = async () => {
+        if (!pending) return;
         setError('');
         setBusy(true);
         setProgress(0);
         try {
-            const ready = await prepareImage(file);
+            const ready = await prepareImage(pending.file);
             const uploaded = await uploadToCloudinary(slot, ready, setProgress);
             const { data } = await saveMedia(slot, {
                 url: uploaded.secure_url,
@@ -79,6 +92,7 @@ const ImageUploader = ({ slot, label, hint, aspect = '16 / 10', emptyText = 'No 
                 height: uploaded.height,
             });
             setSlot(slot, data);
+            setPending(null);
         } catch (err) {
             setError(errorMessage(err));
         } finally {
@@ -102,7 +116,7 @@ const ImageUploader = ({ slot, label, hint, aspect = '16 / 10', emptyText = 'No 
     };
 
     const browse = () => !busy && inputRef.current?.click();
-    const preview = item?.url ? cloudinaryUrl(item.url, 800) : fallbackSrc;
+    const preview = pending?.previewUrl ?? (item?.url ? cloudinaryUrl(item.url, 800) : fallbackSrc);
 
     return (
         <Box>
@@ -120,7 +134,7 @@ const ImageUploader = ({ slot, label, hint, aspect = '16 / 10', emptyText = 'No 
                 onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), browse())}
                 onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
                 onDragLeave={() => setDragging(false)}
-                onDrop={(e) => { e.preventDefault(); setDragging(false); upload(e.dataTransfer.files?.[0]); }}
+                onDrop={(e) => { e.preventDefault(); setDragging(false); !busy && choose(e.dataTransfer.files?.[0]); }}
                 sx={{
                     aspectRatio: aspect, maxHeight: compact ? 140 : 240, width: '100%', mx: 'auto',
                     borderRadius: '12px', overflow: 'hidden', position: 'relative', cursor: busy ? 'progress' : 'pointer',
@@ -141,14 +155,14 @@ const ImageUploader = ({ slot, label, hint, aspect = '16 / 10', emptyText = 'No 
                         <Typography variant="caption">Drop an image or click to browse</Typography>
                     </Stack>
                 )}
-                {preview && !item?.url && (
-                    <Box sx={{ position: 'absolute', top: 6, left: 6, px: 1, py: 0.25, borderRadius: 1, bgcolor: 'rgba(15,15,26,0.7)', color: '#fff', fontSize: 11, fontWeight: 600 }}>
-                        Default
+                {(pending || (preview && !item?.url)) && (
+                    <Box sx={{ position: 'absolute', top: 6, left: 6, px: 1, py: 0.25, borderRadius: 1, bgcolor: pending ? '#f59e0b' : 'rgba(15,15,26,0.7)', color: '#fff', fontSize: 11, fontWeight: 600 }}>
+                        {pending ? 'Unsaved' : 'Default'}
                     </Box>
                 )}
                 {preview && (
                     <Box className="upload-hint" sx={{ position: 'absolute', inset: 0, bgcolor: 'rgba(15,15,26,0.55)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, opacity: dragging ? 1 : 0, transition: 'opacity .15s', fontSize: 13, fontWeight: 600 }}>
-                        <CloudUploadOutlinedIcon fontSize="small" /> {dragging ? 'Drop to upload' : 'Click or drop to replace'}
+                        <CloudUploadOutlinedIcon fontSize="small" /> {dragging ? 'Drop to preview' : 'Click or drop to choose another'}
                     </Box>
                 )}
                 {busy && (
@@ -161,11 +175,22 @@ const ImageUploader = ({ slot, label, hint, aspect = '16 / 10', emptyText = 'No 
             {hint && <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 0.75, lineHeight: 1.4 }}>{hint}</Typography>}
             {error && <Alert severity="error" sx={{ mt: 1 }} onClose={() => setError('')}>{error}</Alert>}
             <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
-                <input ref={inputRef} type="file" accept={ACCEPT} hidden onChange={(e) => { upload(e.target.files?.[0]); e.target.value = ''; }} />
-                <Button size="small" variant="contained" startIcon={<AddPhotoAlternateOutlinedIcon />} disabled={busy} onClick={browse} sx={gradientButtonSx}>
-                    {item?.url ? 'Replace' : 'Upload'}
-                </Button>
-                {item?.url && (
+                <input ref={inputRef} type="file" accept={ACCEPT} hidden onChange={(e) => { choose(e.target.files?.[0]); e.target.value = ''; }} />
+                {pending ? (
+                    <>
+                        <Button size="small" variant="contained" startIcon={<SaveOutlinedIcon />} disabled={busy} onClick={save} sx={gradientButtonSx}>
+                            Save photo
+                        </Button>
+                        <Button size="small" disabled={busy} onClick={cancel}>
+                            Cancel
+                        </Button>
+                    </>
+                ) : (
+                    <Button size="small" variant="contained" startIcon={<AddPhotoAlternateOutlinedIcon />} disabled={busy} onClick={browse} sx={gradientButtonSx}>
+                        {item?.url ? 'Replace' : 'Upload'}
+                    </Button>
+                )}
+                {item?.url && !pending && (
                     <Button size="small" color="error" startIcon={<DeleteOutlinedIcon />} disabled={busy} onClick={handleRemove}>
                         Remove
                     </Button>

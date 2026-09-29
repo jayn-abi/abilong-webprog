@@ -6,11 +6,11 @@ import { usePortfolio } from '../../context/PortfolioContext';
 const TimelineItem = ({ item, icon, delay }) => {
   const Icon = icon;
   return (
-  <Reveal as="li" delay={delay} className="relative grid gap-4 md:grid-cols-[11rem_1fr] md:gap-8">
+  <Reveal as="li" delay={delay} variant="left" className="relative grid gap-4 md:grid-cols-[11rem_1fr] md:gap-8">
     <div className="flex items-center gap-3 md:flex-col md:items-start md:gap-2">
       {item.period && <p className="font-mono text-sm text-(--subtle)">{item.period}</p>}
     </div>
-    <div className="surface p-6">
+    <div className="surface spotlight p-6">
       <div className="flex items-start gap-4">
         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-(--accent-soft) text-(--accent)">
           <Icon className="h-5 w-5" aria-hidden="true" />
@@ -20,9 +20,9 @@ const TimelineItem = ({ item, icon, delay }) => {
           {item.org && <p className="mt-0.5 text-sm font-medium text-(--muted)">{item.org}</p>}
         </div>
       </div>
-      <ul className="mt-5 space-y-2.5">
-        {(item.points ?? []).map((pt) => (
-          <li key={pt} className="flex gap-3 text-sm leading-6 text-(--muted)">
+      <ul className="stagger mt-5 space-y-2.5">
+        {(item.points ?? []).map((pt, i) => (
+          <li key={pt} style={{ '--i': i * 2 }} className="flex gap-3 text-sm leading-6 text-(--muted)">
             <span className="mt-2.5 h-1 w-1 shrink-0 rounded-full bg-(--accent)" aria-hidden="true" />
             {pt}
           </li>
@@ -69,9 +69,9 @@ const Experience = () => {
         <Reveal as="h3" className="mb-6 font-mono text-xs uppercase tracking-[0.16em] text-(--subtle)">Education</Reveal>
         <ul className="space-y-4">
           {education.map((ed, i) => (
-            <Reveal as="li" key={`${ed.degree}-${ed.school}`} delay={i * 60} className="grid gap-4 md:grid-cols-[11rem_1fr] md:gap-8">
+            <Reveal as="li" key={`${ed.degree}-${ed.school}`} delay={i * 80} variant="left" className="grid gap-4 md:grid-cols-[11rem_1fr] md:gap-8">
               <p className="font-mono text-sm text-(--subtle)">{ed.period}</p>
-              <div className="surface flex items-start gap-4 p-6">
+              <div className="surface spotlight flex items-start gap-4 p-6">
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-(--accent-soft) text-(--accent)">
                   <GraduationCap className="h-5 w-5" aria-hidden="true" />
                 </span>

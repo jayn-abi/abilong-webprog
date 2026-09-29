@@ -8,6 +8,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 import { usePortfolioAdmin } from '../../context/PortfolioContext';
 import { useMedia } from '../../context/MediaContext';
+import { isDocumentSlot } from '../../data/documents';
 
 const Stat = ({ icon, label, value, sub, to, accent }) => (
     <Paper variant="outlined" sx={{ p: 2.5, borderRadius: '16px', display: 'flex', flexDirection: 'column', gap: 1.25 }}>
@@ -29,7 +30,10 @@ const Stat = ({ icon, label, value, sub, to, accent }) => (
 const PortfolioOverview = () => {
     const { content } = usePortfolioAdmin();
     const { media } = useMedia();
-    const { projects, featuredProject, certifications, links } = content;
+    const { certifications, links } = content;
+    const projects = content.projects.filter((p) => !p.archived);
+    const archivedCount = content.projects.length - projects.length;
+    const featuredProject = projects.find((p) => p.featured);
 
     const todo = [
         ...projects.filter((p) => !media[p.media.web]?.url).map((p) => ({ text: `Add a screenshot for ${p.name || 'an untitled project'}`, to: '/dashboard/projects' })),
@@ -44,9 +48,9 @@ const PortfolioOverview = () => {
                 Your portfolio
             </Typography>
             <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', lg: 'repeat(4, 1fr)' } }}>
-                <Stat icon={<WorkOutlineIcon />} accent="#0891b2" label="Projects" value={projects.length} sub={featuredProject ? `Featured: ${featuredProject.name}` : 'None featured'} to="/dashboard/projects" />
+                <Stat icon={<WorkOutlineIcon />} accent="#0891b2" label="Projects" value={projects.length} sub={[featuredProject ? `Featured: ${featuredProject.name}` : 'None featured', archivedCount && `${archivedCount} archived`].filter(Boolean).join(' · ')} to="/dashboard/projects" />
                 <Stat icon={<WorkspacePremiumOutlinedIcon />} accent="#a855f7" label="Certifications" value={certifications.length} sub={certifications.length ? 'Shown on the Skills page' : 'Learning track shown instead'} to="/dashboard/certifications" />
-                <Stat icon={<PhotoLibraryOutlinedIcon />} accent="#10b981" label="Images uploaded" value={Object.keys(media).length} sub="Screenshots, logos & certificates" />
+                <Stat icon={<PhotoLibraryOutlinedIcon />} accent="#10b981" label="Images uploaded" value={Object.keys(media).filter((slot) => !isDocumentSlot(slot)).length} sub="Screenshots, logos & certificates" />
                 <Stat icon={<EditNoteOutlinedIcon />} accent="#f59e0b" label="Site content" value="Edit" sub="Profile, about, skills, experience" to="/dashboard/content" />
             </Box>
 

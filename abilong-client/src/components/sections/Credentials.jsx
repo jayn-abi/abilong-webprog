@@ -3,14 +3,12 @@ import { Link } from 'react-router-dom';
 import Section from '../portfolio/Section';
 import Reveal from '../portfolio/Reveal';
 import { GithubIcon, LinkedinIcon } from '../portfolio/icons';
-import { usePortfolio } from '../../context/PortfolioContext';
+import { useLinks } from '../../data/documents';
 
 const buildDocuments = (links) => [
   { title: 'Curriculum Vitae', meta: 'CV · PDF', href: links.cv, icon: FileText, primary: true },
-  { title: 'Transcript of Records', meta: 'Academic record · Google Drive', href: links.transcript, icon: GraduationCap },
-  links.certificates
-    ? { title: 'Certifications', meta: 'Certificate files · Google Drive', href: links.certificates, icon: Award }
-    : { title: 'Certifications', meta: 'Credentials & training', to: '/skills#certifications', icon: Award },
+  { title: 'Transcript of Records', meta: links.uploaded.transcript ? 'Academic record · PDF' : 'Academic record · Google Drive', href: links.transcript, icon: GraduationCap },
+  { title: 'Certifications', meta: 'Credentials & training', to: '/#certifications', icon: Award },
   { title: 'GitHub', meta: 'Code & repositories', href: links.github, icon: GithubIcon },
   { title: 'LinkedIn', meta: 'Professional profile', href: links.linkedin, icon: LinkedinIcon },
   { title: 'Video Introduction', meta: 'Short personal intro', href: links.video, icon: CirclePlay },
@@ -38,7 +36,7 @@ const DocCard = ({ doc, delay }) => {
     </>
   );
   const cls = `group flex items-center gap-4 rounded-2xl border bg-(--card) p-5 transition-all ${
-    available ? 'border-(--border) hover:border-(--accent-ring) hover:shadow-(--shadow-card)' : 'border-dashed border-(--border-strong)'
+    available ? 'spotlight border-(--border) hover:-translate-y-1 hover:border-(--accent-ring) hover:shadow-(--shadow-lift)' : 'border-dashed border-(--border-strong)'
   }`;
 
   return (
@@ -55,7 +53,7 @@ const DocCard = ({ doc, delay }) => {
 };
 
 const Credentials = () => {
-  const { links } = usePortfolio();
+  const links = useLinks();
   const documents = buildDocuments(links);
   return (
   <Section

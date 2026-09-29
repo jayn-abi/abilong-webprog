@@ -14,7 +14,7 @@ const Projects = () => {
       title="Work I've built and coordinated"
       intro="Academic and team projects spanning planning, development, system integration, UI/UX, and testing. Open any project for its full case study."
     >
-      {featuredProject && <CaseStudy project={featuredProject} eyebrow="Featured project" />}
+      {featuredProject && <CaseStudy project={featuredProject} eyebrow="Featured project" summary />}
 
       {others.length > 0 && (
         <>

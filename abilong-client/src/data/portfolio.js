@@ -20,8 +20,8 @@ export const profile = {
   tagline: 'IT Student · Project Management', // shown under the name in the nav bar
   location: 'Philippines',
   summary:
-    'Building technology-driven solutions through project management, software development, Agile practices, and quality assurance.',
-  focus: ['Project Management', 'Agile / Scrum', 'Software Development', 'QA & Testing'],
+    'Building technology-driven solutions through project management, Agile practices, and quality assurance.',
+  focus: ['Project Management', 'Agile / Scrum', 'QA & Testing'],
   availability: 'Open to internships',
 };
 
@@ -43,9 +43,7 @@ export const about = {
   languages: 'Filipino (Native) · English (Proficient) · Italian (Introductory)',
   interests: [
     { title: 'Project Management', body: 'Planning scope, timelines, and responsibilities for team projects.' },
-    { title: 'Agile / Scrum', body: 'Iterative delivery, clear backlogs, and regular team check-ins.' },
-    { title: 'Software Development', body: 'Mobile and web applications with Flutter, React, and Node.js.' },
-    { title: 'QA & Software Testing', body: 'Verifying features against requirements before they ship.' },
+    { title: 'Agile / Scrum', body: 'Iterative delivery, clear backlogs, and regular team check-ins.' },    { title: 'QA & Software Testing', body: 'Verifying features against requirements before they ship.' },
     { title: 'Technology-driven Solutions', body: 'Using data and software to address real community problems.' },
     { title: 'User-centered Experiences', body: 'Interfaces designed around the people who actually use them.' },
   ],
@@ -84,6 +82,34 @@ export const projects = [
       { title: 'UI/UX design', body: 'Designed the interface flows for the mobile and web experience.' },
     ],
     media: { web: 'healthcast-web', mobile: 'healthcast-mobile', logo: 'healthcast-logo' },
+    github: '',   // TODO: repository link, if public
+    demo: '',     // TODO: live demo link, if available
+  },
+  {
+    id: 'bulldogs-exchange',
+    name: 'Bulldogs Exchange',
+    tagline: 'Campus e-commerce platform',
+    subtitle: 'BulldogEx Shop — an online store for National University students',
+    context: 'Advanced Web Programming (CTADWEBL) · National University · 2026',
+    description:
+      'A full-stack e-commerce website where NU students can browse and buy campus essentials, student merch, and uniforms in one storefront, with supplier and admin tools for managing products, categories, and orders.',
+    role: 'Full-Stack Developer',
+    technologySummary: 'MERN Stack with Cloudinary',
+    focus: 'Backend Architecture · API Security · Database Design',
+    tech: ['React', 'Node.js / Express', 'MongoDB', 'Mongoose', 'JWT', 'Bcrypt', 'Multer', 'Cloudinary', 'Helmet', 'Postman'],
+    contribution:
+      'Built the REST API and storefront end to end, from the MongoDB data model and MVC structure through role-based security, request validation, rate limiting, audit logging, and Cloudinary product images.',
+    responsibilities: [
+      { title: 'Database design', body: 'Modelled the product, category, cart, order, review, supplier, and user collections in MongoDB, choosing referenced or embedded documents per relationship (orders keep a price and name snapshot) and adding indexes for common queries.' },
+      { title: 'MVC backend', body: 'Organised the Express API into models, controllers, routes, middleware, and a central config that loads environment settings.' },
+      { title: 'Authentication & RBAC', body: 'Implemented registration with Bcrypt password hashing, JWT login, and role-based access for customers, suppliers, and admins, including owner-only checks for editing accounts, products, and reviews.' },
+      { title: 'API security', body: 'Added express-validator request validation, Helmet security headers, a CORS allow-list, rate limiting with longer lockouts after repeated failed logins, and centralised error handling.' },
+      { title: 'Audit logging', body: 'Wrote middleware that records every request (method, path, user, status code, and duration) to MongoDB at info, warning, or error level.' },
+      { title: 'Media management', body: 'Handled product image uploads with Multer and Cloudinary, with size and type limits, file-signature checks that reject files posing as images, and image replacement and deletion.' },
+      { title: 'Storefront & admin UI', body: 'Built the React storefront, cart, and orders pages plus an admin dashboard for products, orders, reviews, and users, with image previews before upload.' },
+      { title: 'API testing', body: 'Tested every endpoint and role scenario in Postman, including validation errors, forbidden access, and rate-limit responses.' },
+    ],
+    media: { web: 'bulldogs-exchange-web', mobile: 'bulldogs-exchange-mobile', logo: 'bulldogs-exchange-logo' },
     github: '',   // TODO: repository link, if public
     demo: '',     // TODO: live demo link, if available
   },
@@ -205,22 +231,16 @@ export const education = [
 ];
 
 /*
- * Certifications — managed from Dashboard → Certifications.
- *   type: 'Certification'      → a formal, issued professional certification
- *         'Course completion'  → a course / training certificate
- *         'In progress'        → currently studying for it
- * Shape: { id, name, issuer, year, type, link, media }  (media = image slot)
+ * Certifications — managed from Dashboard → Certifications, shown in list order.
+ * Shape: { id, name, issuer, year, link, media }  (media = image slot)
  */
-export const certificationTypes = ['Certification', 'Course completion', 'In progress'];
-
 export const certifications = [];
 
 // Shown in the Certifications section while the list above is empty.
 export const learningAreas = ['Agile', 'Scrum', 'Technology Management', 'Project Management', 'QA / Software Testing'];
-
 export const contact = {
   headline: "Let's Connect",
-  body: 'Open to internship opportunities, technology projects, and opportunities related to project management, software development, QA, and IT.',
+  body: 'Open to internship opportunities, technology projects, and opportunities related to project management, QA, and IT.',
 };
 
 export const defaultPortfolio = {

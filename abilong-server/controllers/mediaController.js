@@ -8,6 +8,9 @@ const {
 
 const FOLDER = 'portfolio';
 const SLOT_PATTERN = /^[a-z0-9-]{1,40}$/;
+// These slots hold PDFs (CV, transcript); every other slot holds an image
+const DOCUMENT_SLOTS = ['document-cv', 'document-transcript'];
+const formatsFor = (slot) => (DOCUMENT_SLOTS.includes(slot) ? 'pdf' : 'jpg,jpeg,png,webp');
 
 const isConfigured = () => CLOUDINARY_CLOUD_NAME && CLOUDINARY_API_KEY && CLOUDINARY_API_SECRET;
 
@@ -29,7 +32,7 @@ const destroyOnCloudinary = async (publicId) => {
 
 const getMedia = async (req, res) => {
   try {
-    const media = await Media.find().select('slot url width height updatedAt');
+    const media = await Media.find().select('slot url width height bytes fileName updatedAt');
     res.json({ media });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -47,7 +50,7 @@ const getSignature = (req, res) => {
     return res.status(400).json({ message: 'Invalid media slot' });
 
   const params = {
-    allowed_formats: 'jpg,jpeg,png,webp',
+    allowed_formats: formatsFor(slot),
     invalidate: 'true',
     overwrite: 'true',
     public_id: `${FOLDER}/${slot}`,
@@ -71,19 +74,24 @@ const getSignature = (req, res) => {
 const saveMedia = async (req, res) => {
   try {
     const { slot } = req.params;
-    const { url, publicId, width, height } = req.body;
+    const { url, publicId, width, height, bytes, fileName } = req.body;
 
     if (!SLOT_PATTERN.test(slot))
       return res.status(400).json({ message: 'Invalid media slot' });
-    // Only accept images that were uploaded to this account for this slot
+    // Only accept files that were uploaded to this account for this slot
     if (typeof url !== 'string' || !url.startsWith(`https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload/`))
-      return res.status(400).json({ message: 'URL must be a Cloudinary image from this account' });
+      return res.status(400).json({ message: 'URL must be a Cloudinary file from this account' });
     if (publicId !== `${FOLDER}/${slot}`)
       return res.status(400).json({ message: 'Public ID does not match the slot' });
+    if (DOCUMENT_SLOTS.includes(slot) && !url.toLowerCase().endsWith('.pdf'))
+      return res.status(400).json({ message: 'This slot only accepts PDF files' });
 
     const media = await Media.findOneAndUpdate(
       { slot },
-      { slot, url, publicId, width, height },
+      {
+        slot, url, publicId, width, height, bytes,
+        fileName: typeof fileName === 'string' ? fileName.slice(0, 120) : undefined,
+      },
       { new: true, upsert: true, runValidators: true }
     );
     res.json(media);

@@ -26,16 +26,16 @@ const Skills = () => {
       {skillGroups.map((group, i) => {
         const Icon = icons[group.title] ?? CodeXml;
         return (
-          <Reveal key={group.title} delay={i * 60} className="surface p-6">
+          <Reveal key={group.title} delay={i * 80} className="surface spotlight card-lift p-6">
             <div className="flex items-center gap-3">
               <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-(--accent-soft) text-(--accent)">
                 <Icon className="h-4.5 w-4.5" aria-hidden="true" />
               </span>
               <h3 className="text-base font-semibold text-(--text)">{group.title}</h3>
             </div>
-            <ul className="mt-5 flex flex-wrap gap-2">
-              {(group.items ?? []).map((item) => (
-                <li key={item} className="rounded-md border border-(--border) bg-(--elevated) px-2.5 py-1.5 text-sm text-(--text)">
+            <ul className="stagger mt-5 flex flex-wrap gap-2">
+              {(group.items ?? []).map((item, j) => (
+                <li key={item} style={{ '--i': j }} className="rounded-md border border-(--border) bg-(--elevated) px-2.5 py-1.5 text-sm text-(--text) transition-colors hover:border-(--accent-ring) hover:text-(--accent)">
                   {item}
                 </li>
               ))}
