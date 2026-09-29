@@ -21,9 +21,8 @@ const corsOptions = {
     "http://localhost:5173",
     "http://localhost:3000",
     "https://abilong-client.vercel.app",
-    "https://abilong-client-git-production-jhyne-s-projects.vercel.app",
-    "https://abilong-client-f60w99uiw-jhyne-s-projects.vercel.app",
-    "https://abilong-client-ft5md0mdj-jhyne-s-projects.vercel.app",
+    // Any deployment or branch URL of the client project on Vercel
+    /^https:\/\/abilong-client-[a-z0-9-]+-jhyne-s-projects\.vercel\.app$/,
   ],
   credentials: true,
   allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
